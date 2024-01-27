@@ -14,10 +14,15 @@ class BuyerClient:
         self.password = None
         self.id = None
 
-    def set_state(self, state):
-        self.username = state['username']
-        self.password = state['password']
-        self.id = state['buyer_id']
+    def check_state(self):
+        if(self.id==None):
+            return False
+        return True
+
+    def set_state(self, username, password, buyer_id):
+        self.username = username
+        self.password = password
+        self.id = buyer_id
 
     def send_request(self, request):
         if not request['body']:
@@ -30,22 +35,38 @@ class BuyerClient:
             s.connect((self.host, self.port))
             s.sendall(json.dumps(request).encode('utf-8'))
             response = s.recv(1024).decode('utf-8')
-            return response
+            return json.loads(response)
 
-    def create_account(self, username, password):
+    def create_account(self):
+        username = input("New Username: ")
+        password = input("New Password: ")
         request = {"action": "create_account", "type": "buyer", 'body': { "username": username, "password": password }}
-        return self.send_request(request)
+        response = self.send_request(request)
 
-    def login(self, username, password):
+        if(response["body"]["is_created"]==True):
+            print("Account Created Successfully")
+        else:
+            print("Account Not Created : ",response["body"]["error"])
+
+    def login(self):
+        username = input("Username: ")
+        password = input("Password: ")
         request = {"action": "login", "type": "buyer", 'body': { "username": username, "password": password }}
         response = self.send_request(request)
-        self.set_state(response)
+
+        if(response["body"]["login"]==True):
+            self.set_state(username, password, response["body"]["buyer_id"])
+            print("Logged In Successfully")
+        else:
+            print("Login Unsuccessful : ",response["body"]["error"])
+        
         return response
 
     def logout(self):
         request = {'actions': 'logout', 'type': 'buyer', 'body': {}}
         self.reset_state()
-        return self.send_request(request)
+        print("Logged Out Successfully")
+        # return self.send_request(request)
 
     def search(self, item, keywords):
         request = {"action": "search", "type": "buyer", 'body': { "category": item, 'keywords': keywords }}
@@ -92,7 +113,23 @@ class BuyerClient:
 
 if __name__ == "__main__":
     buyer = BuyerClient('127.0.0.1', 1234)
-    response = buyer.create_account('buyer1', 'password123')
-    print(response)
-    response = buyer.login('buyer1', 'password123')
-    print(response)
+    while(True):
+        if(buyer.check_state()==False):
+            print("1. Create Account \n2. Login \n")
+            action_number = int(input("Action Number: "))
+            if(action_number==1):
+                buyer.create_account()
+            elif(action_number==2):
+                buyer.login()
+            else:
+                print("Give Appropriate Action Number")
+                continue
+        else:
+            print("1. Create Account \n2. Logout \n")
+            action_number = int(input("Action Number: "))
+            if(action_number==1):
+                buyer.create_account()
+            elif(action_number==2):
+                buyer.logout()
+
+
