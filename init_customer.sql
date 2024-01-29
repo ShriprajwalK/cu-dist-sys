@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS buyers,shopping_cart, purchases ;
+-- DROP TABLE IF EXISTS buyers,shopping_cart, purchases ;
 
 CREATE TABLE IF NOT EXISTS buyers (
     id SERIAL PRIMARY KEY,
