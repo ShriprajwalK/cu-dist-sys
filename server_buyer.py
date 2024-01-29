@@ -3,6 +3,7 @@ import psycopg2
 from customer_database import *
 from product_database import *
 import json
+from server_buyer_helper import *
 
 class BuyerServer:
     def __init__(self, server_host, server_port):
@@ -10,6 +11,7 @@ class BuyerServer:
         self.server_port = server_port
         self.customer_db = CustomerDatabase('customers','12345','localhost','5432','postgres')
         self.product_db = ProductDatabase('products','12345','localhost','5432','postgres')
+        self.server_buyer_helper = BuyerServerHelper(self.customer_db, self.product_db)
         self.databases_init()
         self.create_server_socket()
 
@@ -34,38 +36,11 @@ class BuyerServer:
         print(f"Received data from client: {data}")
         action = parsed_data['action']
 
-        return self.choose_and_execute_action(action,client_socket,parsed_data)
-        
-
-    def choose_and_execute_action(self,action,client_socket,data):
-        response = {"action": action, "type": "buyer"}
-        if(action=="create_account"):
-            username = data["body"]["username"]
-            password = data["body"]["password"]
-            try:
-                self.customer_db.create_buyer(username,password)
-                response['body']= {"is_created":True}
-            except Exception as e:
-                response['body'] = {"is_created":False, "error":str(e)}
-
-        if(action=="login"):
-            username = data["body"]["username"]
-            password = data["body"]["password"]
-            try:
-                buyer_id = self.customer_db.check_buyer_credentials(username,password)
-
-                if(buyer_id!=None):
-                    response['body'] = {"login":True,"buyer_id" : buyer_id}
-                else:
-                    response['body'] = {"login":False, "error":"Username/Password does not exist"}
-            except Exception as e:
-                response['body'] = {"login":False, "error":str(e)}
-                
+        # return self.choose_and_execute_action(action,client_socket,parsed_data)
+        response = self.server_buyer_helper.choose_and_execute_action(action, parsed_data)
+        print("response",response)
         client_socket.send(json.dumps(response).encode('utf-8'))
-        client_socket.close()
-        return response        
-
-
+        client_socket.close()        
 
 if __name__ == "__main__":
     server_host = "localhost"

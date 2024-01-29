@@ -1,5 +1,6 @@
 import socket
 import json
+from prettytable import PrettyTable
 
 class BuyerClient:
     def __init__(self, host, port):
@@ -68,9 +69,23 @@ class BuyerClient:
         print("Logged Out Successfully")
         # return self.send_request(request)
 
-    def search(self, item, keywords):
-        request = {"action": "search", "type": "buyer", 'body': { "item_category": item, 'keywords': keywords }}
-        return self.send_request(request)
+    def search(self):
+        item_category = input("Item Category: ")
+        keywords = input("Give atleast 5 comma separated keywords: ")
+        request = {"action": "search", "type": "buyer", 'body': { "item_category": item_category, 'keywords': keywords }}
+        response = self.send_request(request)
+
+        response_body = response["body"]
+        table = PrettyTable(["Id","Wuantity","Price","Rating"])
+        for item in response_body["items"]:
+            item_id = item["item_id"]
+            quantity = item["quantity"]
+            price = item["price"]
+            rating = item["rating"]
+            table.add_row([item_id,quantity,price,rating])
+
+        print(table)
+            
 
     def cart_add(self, item, num):
         request = {"action": "cart_add", "type": "buyer", 'body': { "item": item, 'quantity': num}}
