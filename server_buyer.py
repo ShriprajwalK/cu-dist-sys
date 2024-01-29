@@ -1,24 +1,21 @@
 import socket
 import psycopg2
 from customer_database import *
+from product_database import *
 import json
 
 class BuyerServer:
-    def __init__(self, server_host, server_port,db_connection):
+    def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
-        self.db_connection = db_connection
-        self.sql_init()
-        
+        self.customer_db = CustomerDatabase('customers','12345','localhost','5432','postgres')
+        self.product_db = ProductDatabase('products','12345','localhost','5432','postgres')
+        self.databases_init()
         self.create_server_socket()
 
-    def sql_init(self):
-
-        with self.db_connection.cursor() as cursor:
-            cursor.execute(open("init_customer.sql", "r").read())
-
-        self.db_connection.commit()
-        print("SQL script executed successfully.")
+    def databases_init(self):
+        self.customer_db.database_init("init_customer.sql")
+        self.product_db.database_init("init_product.sql")
 
     def create_server_socket(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -46,7 +43,7 @@ class BuyerServer:
             username = data["body"]["username"]
             password = data["body"]["password"]
             try:
-                create_buyer(self.db_connection, username,password)
+                self.customer_db.create_buyer(username,password)
                 response['body']= {"is_created":True}
             except Exception as e:
                 response['body'] = {"is_created":False, "error":str(e)}
@@ -55,7 +52,7 @@ class BuyerServer:
             username = data["body"]["username"]
             password = data["body"]["password"]
             try:
-                buyer_id = check_buyer_credentials(self.db_connection, username,password)
+                buyer_id = self.customer_db.check_buyer_credentials(username,password)
 
                 if(buyer_id!=None):
                     response['body'] = {"login":True,"buyer_id" : buyer_id}
@@ -73,6 +70,5 @@ class BuyerServer:
 if __name__ == "__main__":
     server_host = "localhost"
     server_port = 1234  
-    db_connection = connect()
 
-    buyer_server = BuyerServer(server_host, server_port,db_connection)
+    buyer_server = BuyerServer(server_host, server_port)
