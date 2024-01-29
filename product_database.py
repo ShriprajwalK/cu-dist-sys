@@ -52,9 +52,41 @@ class ProductDatabase:
                 print(f"Error: Unable to create Item.\n{e}")
                 self.connection.commit()
                 raise e
+            
+        def get_all_items(self):
+            try:
+                with self.connection.cursor() as cursor:
+                    insert_query = sql.SQL("SELECT * FROM items")
+                    cursor.execute(insert_query)
+                    item_list = cursor.fetchall()
+                self.connection.commit()
+                return item_list
+                
+            except Exception as e:
+                print(f"Error: Unable to Fetch Items.\n{e}")
+                self.connection.commit()
+                raise e
+            
+        def get_item_by_id(self,item_id):
+            # try:
+                with self.connection.cursor() as cursor:
+                    insert_query = sql.SQL("SELECT * FROM items where id = {};").format(sql.Literal(item_id))
+                    cursor.execute(insert_query)
+                    item = cursor.fetchall()[0]
+                    print(item)
+                self.connection.commit()
+                return item
+                
+            # except Exception as e:
+            #     print(f"Error: Unable to Fetch Buyer Id.\n{e}")
+            #     self.connection.commit()
+            #     raise e
 
 
 # d = ProductDatabase('products','12345','localhost','5432','postgres')
+# print(d.get_item_by_id(1))
+
 # d.database_init("init_product.sql")
 # d.create_seller("1","1")
-# d.create_item(1 ,5,200,"orange, orange, round, fruit")
+# d.create_item(1 ,10,100,"apple, red, round, fruit")
+# print(d.get_all_items())
