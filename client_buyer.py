@@ -69,7 +69,7 @@ class BuyerClient:
         # return self.send_request(request)
 
     def search(self, item, keywords):
-        request = {"action": "search", "type": "buyer", 'body': { "category": item, 'keywords': keywords }}
+        request = {"action": "search", "type": "buyer", 'body': { "item_category": item, 'keywords': keywords }}
         return self.send_request(request)
 
     def cart_add(self, item, num):
