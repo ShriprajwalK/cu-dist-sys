@@ -9,6 +9,6 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data
       - ./sql:/sql
-      - ./init_dbs.sh:/docker-entrypoint-initdb.d/init_postgres.sh
+      - ./init_dbs.sh:/docker-entrypoint-initdb.d/init_dbs.sh
     ports:
       - "5432:5432"

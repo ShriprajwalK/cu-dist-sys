@@ -1,33 +1,23 @@
 import socket
 import psycopg2
-from ..postgres.customer_database import *
-from ..postgres.product_database import *
+from customer_database import *
+from product_database import *
 import json
-from .server_buyer_helper import *
-import sys
-
+from server_buyer_helper import *
 
 class BuyerServer:
     def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
-        self.credentials = {}
-        with open('ass1/postgres/credentials.json') as credentials:
-            self.credentials = json.load(credentials)
-            host = self.credentials['host']
-            password = self.credentials['password']
-            port = self.credentials['port']
-            user = self.credentials['user']
-
-        self.customer_db = CustomerDatabase('customer', password, host, port, user)
-        self.product_db = ProductDatabase('product', password, host, port, user)
+        self.customer_db = CustomerDatabase('customers','12345','localhost','5432','postgres')
+        self.product_db = ProductDatabase('products','12345','localhost','5432','postgres')
         self.server_buyer_helper = BuyerServerHelper(self.customer_db, self.product_db)
-        # self.databases_init()
+        self.databases_init()
         self.create_server_socket()
 
-    # def databases_init(self):
-    #    self.customer_db.database_init("init_customer.sql")
-    #    self.product_db.database_init("init_product.sql")
+    def databases_init(self):
+        self.customer_db.database_init("init_customer.sql")
+        self.product_db.database_init("init_product.sql")
 
     def create_server_socket(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -35,15 +25,10 @@ class BuyerServer:
         server_socket.listen(1000)
         print("Server Running and Accepting Client Request")
 
-        try:
-            while True:
-                client_socket, client_address = server_socket.accept()
-                print(f"Accepted connection from {client_address}")
-                self.handle_client_request(client_socket)
-        except:
-            print("\nCtrl+C pressed. Shutting down.")
-            server_socket.close()
-            sys.exit(0)
+        while True:
+            client_socket, client_address = server_socket.accept()
+            print(f"Accepted connection from {client_address}")
+            self.handle_client_request(client_socket)
 
     def handle_client_request(self, client_socket):
         data = client_socket.recv(1024).decode('utf-8')
@@ -53,10 +38,9 @@ class BuyerServer:
 
         # return self.choose_and_execute_action(action,client_socket,parsed_data)
         response = self.server_buyer_helper.choose_and_execute_action(action, parsed_data)
-        print("response", response)
+        print("response",response)
         client_socket.send(json.dumps(response).encode('utf-8'))
         client_socket.close()
-
 
 if __name__ == "__main__":
     server_host = "localhost"

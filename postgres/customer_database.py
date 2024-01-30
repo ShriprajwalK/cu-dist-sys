@@ -26,7 +26,7 @@ class CustomerDatabase:
         def create_buyer(self, username, password):
             try:
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("INSERT INTO buyers (username, password) VALUES ({}, {});").format(
+                    insert_query = sql.SQL("INSERT INTO buyer (username, password) VALUES ({}, {});").format(
                         sql.Literal(username), sql.Literal(password)
                     )
                     cursor.execute(insert_query)
@@ -43,7 +43,7 @@ class CustomerDatabase:
             try:
                 buyer_id = None
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("SELECT id FROM buyers where username = {} AND password = {};").format(
+                    insert_query = sql.SQL("SELECT id FROM buyer where username = {} AND password = {};").format(
                         sql.Literal(username), sql.Literal(password)
                     )
                     cursor.execute(insert_query)
@@ -63,8 +63,8 @@ class CustomerDatabase:
         def get_buyer_id(self,username):
             try:
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("SELECT id FROM buyers where username = {};").format(sql.Literal(username))
-                    cursor.execute(insert_query)
+                    select_query = sql.SQL("SELECT id FROM buyer where username = {};").format(sql.Literal(username))
+                    cursor.execute(select_query)
                     buyer_id = cursor.fetchall()[0][0]
                 self.connection.commit()
                 return buyer_id

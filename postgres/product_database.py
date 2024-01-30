@@ -26,7 +26,7 @@ class ProductDatabase:
         def create_seller(self, username, password):
             try:
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("INSERT INTO sellers (username, password) VALUES ({}, {});").format(
+                    insert_query = sql.SQL("INSERT INTO seller (username, password) VALUES ({}, {});").format(
                         sql.Literal(username), sql.Literal(password)
                     )
                     cursor.execute(insert_query)
@@ -41,7 +41,7 @@ class ProductDatabase:
         def create_item(self, seller_id,quantity,price,description ):
             try:
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("INSERT INTO items (seller_id,quantity,price,description) VALUES ({}, {}, {}, {});").format(
+                    insert_query = sql.SQL("INSERT INTO item (seller_id,quantity,price,description) VALUES ({}, {}, {}, {});").format(
                         sql.Literal(seller_id), sql.Literal(quantity), sql.Literal(price), sql.Literal(description)
                     )
                     cursor.execute(insert_query)
@@ -56,7 +56,7 @@ class ProductDatabase:
         def get_all_items(self):
             try:
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("SELECT * FROM items")
+                    insert_query = sql.SQL("SELECT * FROM item")
                     cursor.execute(insert_query)
                     item_list = cursor.fetchall()
                 self.connection.commit()
@@ -70,7 +70,7 @@ class ProductDatabase:
         def get_item_by_id(self,item_id):
             # try:
                 with self.connection.cursor() as cursor:
-                    insert_query = sql.SQL("SELECT * FROM items where id = {};").format(sql.Literal(item_id))
+                    insert_query = sql.SQL("SELECT * FROM item where id = {};").format(sql.Literal(item_id))
                     cursor.execute(insert_query)
                     item = cursor.fetchall()[0]
                     print(item)
