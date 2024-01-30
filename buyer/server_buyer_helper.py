@@ -13,7 +13,7 @@ class BuyerServerHelper:
             "create_account": self.create_account,
             "login": self.login,
             "search": self.search,
-            "cart_add": self.cart_add
+            "get_rating": self.cart_add
         }
 
         # Get the method based on the action
@@ -33,7 +33,7 @@ class BuyerServerHelper:
         password = data["body"]["password"]
         response_body = {}
         try:
-            buyer_id = self.customer_db.check_buyer_credentials(username, password)
+            buyer_id = self.product_db.check_buyer_credentials(username, password)
 
             if (buyer_id != None):
                 response_body = {"login": True, "buyer_id": buyer_id}
