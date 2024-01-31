@@ -7,5 +7,4 @@
 [ ] Add seller server
 [ ] Add features for seller
 [ ] Test client-server for seller
-
-
+[ ] Add a proper logger(inbuilt/winston?)

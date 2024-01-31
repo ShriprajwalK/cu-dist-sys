@@ -40,7 +40,7 @@ class BuyerServer:
                 client_socket, client_address = server_socket.accept()
                 print(f"Accepted connection from {client_address}")
                 self.handle_client_request(client_socket)
-        except:
+        except KeyboardInterrupt:
             print("\nCtrl+C pressed. Shutting down.")
             server_socket.close()
             sys.exit(0)
