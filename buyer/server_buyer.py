@@ -2,6 +2,7 @@ import socket
 import psycopg2
 from ..postgres.customer_database import *
 from ..postgres.product_database import *
+from ..postgres.postgres_helper import get_db
 import json
 from .server_buyer_helper import *
 import sys
@@ -11,16 +12,10 @@ class BuyerServer:
     def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
-        self.credentials = {}
-        with open('ass1/postgres/credentials.json') as credentials:
-            self.credentials = json.load(credentials)
-            host = self.credentials['host']
-            password = self.credentials['password']
-            port = self.credentials['port']
-            user = self.credentials['user']
 
-        self.customer_db = CustomerDatabase('customer', password, host, port, user)
-        self.product_db = ProductDatabase('product', password, host, port, user)
+        self.customer_db = get_db('customer')
+        self.product_db = get_db('product')
+
         self.server_buyer_helper = BuyerServerHelper(self.customer_db, self.product_db)
         # self.databases_init()
         self.create_server_socket()

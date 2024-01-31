@@ -46,10 +46,10 @@ class BuyerClient:
         request = {"action": "create_account", "type": "buyer", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
 
-        if response['error']:
+        if 'error' in response['body']:
             print("Account Not Created : ", response["body"]["error"], "\n")
         else:
-            print(response['message'])
+            print(response['body']['message'])
 
     def login(self):
         username = input("Username: ")
@@ -57,11 +57,12 @@ class BuyerClient:
         request = {"action": "login", "type": "buyer", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
 
-        if response['error']:
+        print(response)
+        if 'error' in response['body']:
             print("Login Unsuccessful : ", response["body"]["error"], "\n")
         else:
             self.set_state(username, password, response["body"]["buyer_id"])
-            print(response['message'])
+            print(response['body']['message'])
 
         return response
 
@@ -108,13 +109,13 @@ class BuyerClient:
         quantity = int(input("Quantity: "))
         item_removed = False
         for item_num in range(len(self.cart)):
-            if (self.cart[item_num][0] == item_id):
+            if self.cart[item_num][0] == item_id:
                 self.cart[item_num][1] -= quantity
-                if (self.cart[item_num][1] <= 0):
+                if self.cart[item_num][1] <= 0:
                     self.cart.pop(item_num)
                 item_removed = True
 
-        if (item_removed == True):
+        if item_removed:
             print("Item Successfully Removed")
         else:
             print("Item Not Found in the Cart")
@@ -158,8 +159,8 @@ class BuyerClient:
 
 if __name__ == "__main__":
     buyer = BuyerClient('127.0.0.1', 1234)
-    while (True):
-        if buyer.check_state() == False:
+    while True:
+        if not buyer.check_state():
             print("1. Create Account \n2. Login \n")
             action_number = int(input("Action Number: "))
             print()

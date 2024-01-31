@@ -39,7 +39,7 @@ class BuyerServerHelper:
         password = data["body"]["password"]
         response_body = {}
         try:
-            buyer_id = self.product_db.check_buyer_credentials(username, password)
+            buyer_id = self.customer_db.check_buyer_credentials(username, password)
 
             if buyer_id != None:
                 response_body = {"login": True, "buyer_id": buyer_id, 'message': 'Login successful'}
