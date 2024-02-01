@@ -1,4 +1,5 @@
 from buyer.customer_database_connect import *
+from buyer.product_database_connect import *
 
 def jaccard_similarity(x, y):
     intersection_cardinality = len(set.intersection(*[set(x), set(y)]))
@@ -10,6 +11,7 @@ class BuyerServerHelper:
 
     def __init__(self):
         self.customer_db = CustomerDatabaseConnection("localhost",9000)
+        self.product_db = ProductDatabaseConnection("localhost",9001)
         # self.product_db = product_db
 
     def choose_and_execute_action(self, action, data):
@@ -85,7 +87,7 @@ class BuyerServerHelper:
             num_of_items = 5
 
             current_item_number = 1
-            for ranked_item in item_list:
+            for ranked_item in items_list:
                 item = {"item_id": ranked_item[0], "quantity": ranked_item[2], "price": ranked_item[3],
                         "rating": ranked_item[4]}
                 response_body["items"].append(item)
@@ -95,6 +97,7 @@ class BuyerServerHelper:
 
             return response_body
         except Exception as e:
+            response_body = {"items": [], "message": "Search unsuccessful because:"+str(e)}
             return response_body
 
     def cart_add(self, data):

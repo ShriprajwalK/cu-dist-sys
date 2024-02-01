@@ -22,7 +22,7 @@ class ServerHelper:
 
         action_methods = {
             "create_buyer": self.create_buyer,
-            "get_buyer_id": self.get_buyer_id,
+            "get_buyer_id": self.get_buyer_id
             # "search": self.search,
             # "get_rating": self.cart_add
         }
@@ -67,35 +67,6 @@ class ServerHelper:
             response_body = {"is_created": False, "error": str(e)}
         return response_body
 
-    # def search(self, data):
-    #     item_keywords = data["body"]["keywords"]
-    #     item_category = data["body"]["item_category"]
-    #     comparing_text = item_keywords.join(item_category)
-    #     response_body = {"items": [], "message": "Search successful. Results:"}
-    #     similarity_scores = []
-    #     try:
-    #         item_list = self.product_db.get_all_items()
-    #         for item in item_list:
-    #             score = jaccard_similarity(comparing_text, item[5])
-    #             similarity_scores.append((score, item))
-
-    #         similarity_scores.sort(key=lambda k: k[0], reverse=True)
-    #         items_list = [i[1] for i in similarity_scores]
-
-    #         num_of_items = 5
-
-    #         current_item_number = 1
-    #         for ranked_item in item_list:
-    #             item = {"item_id": ranked_item[0], "quantity": ranked_item[2], "price": ranked_item[3],
-    #                     "rating": ranked_item[4]}
-    #             response_body["items"].append(item)
-    #             current_item_number += 1
-    #             if current_item_number == num_of_items:
-    #                 break
-
-    #         return response_body
-    #     except Exception as e:
-    #         return response_body
 
     # def cart_add(self, data):
     #     item_id = data["body"]["item_id"]
