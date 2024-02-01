@@ -1,3 +1,5 @@
+from buyer.customer_database_connect import *
+
 def jaccard_similarity(x, y):
     intersection_cardinality = len(set.intersection(*[set(x), set(y)]))
     union_cardinality = len(set.union(*[set(x), set(y)]))
@@ -6,9 +8,9 @@ def jaccard_similarity(x, y):
 
 class BuyerServerHelper:
 
-    def __init__(self, customer_db, product_db):
-        self.customer_db = customer_db
-        self.product_db = product_db
+    def __init__(self):
+        self.customer_db = CustomerDatabaseConnection("localhost",9000)
+        # self.product_db = product_db
 
     def choose_and_execute_action(self, action, data):
         response = {"action": action, "type": "buyer"}
@@ -39,8 +41,7 @@ class BuyerServerHelper:
         password = data["body"]["password"]
         response_body = {}
         try:
-            buyer_id = self.customer_db.check_buyer_credentials(username, password)
-
+            buyer_id = self.customer_db.get_buyer_by_id(username, password)
             if buyer_id != None:
                 response_body = {"login": True, "buyer_id": buyer_id, 'message': 'Login successful'}
             else:
@@ -56,8 +57,12 @@ class BuyerServerHelper:
         response_body = {}
 
         try:
-            self.customer_db.create_buyer(username, password)
-            response_body = {"is_created": True, "message": 'Account created successfully'}
+            is_created = self.customer_db.create_buyer(username, password)
+            if is_created==False:
+                response_body = {"is_created": False, "message": 'Account not created'}
+            else:
+                response_body = {"is_created": True, "message": 'Account created Successfully'}
+            
         except Exception as e:
             response_body = {"is_created": False, "error": str(e)}
         return response_body

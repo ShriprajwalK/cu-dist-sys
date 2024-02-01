@@ -1,27 +1,21 @@
 import socket
-import json
-from buyer.server_buyer_helper import *
 import sys
+import json
+from product_database.server_helper import ServerHelper
 
-
-class BuyerServer:
+class Server:
     def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
-        # self.product_db = get_db('product')
-
-        self.server_buyer_helper = BuyerServerHelper()
+        self.server_helper = ServerHelper()
         self.create_server_socket()
 
-    # def databases_init(self):
-    #    self.customer_db.database_init("init_customer.sql")
-    #    self.product_db.database_init("init_product.sql")
 
     def create_server_socket(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server_socket.bind((self.server_host, self.server_port))
         server_socket.listen(1000)
-        print("Server Running and Accepting Client Request")
+        print("Product Database Server Running and Accepting Client Request")
 
         try:
             while True:
@@ -39,8 +33,7 @@ class BuyerServer:
         print(f"Received data from client: {data}")
         action = parsed_data['action']
 
-        # return self.choose_and_execute_action(action,client_socket,parsed_data)
-        response = self.server_buyer_helper.choose_and_execute_action(action, parsed_data)
+        response = self.server_helper.choose_and_execute_action(action, parsed_data)
         print("response", response)
         client_socket.send(json.dumps(response).encode('utf-8'))
         client_socket.close()
@@ -48,6 +41,6 @@ class BuyerServer:
 
 if __name__ == "__main__":
     server_host = "localhost"
-    server_port = 1234
+    server_port = 9001
 
-    buyer_server = BuyerServer(server_host, server_port)
+    buyer_server = Server(server_host, server_port)

@@ -2,15 +2,9 @@ import psycopg2
 from psycopg2 import sql
 
 
-class CustomerDatabase:
-    def __init__(self, dbname, password, host, port, user):
-        self.db_params = {
-            'dbname': dbname,
-            'password': password,
-            'host': host,
-            'port': port,
-            'user': user
-        }
+class Dao:
+    def __init__(self, db_params):
+        self.db_params = db_params
         try:
             self.connection = psycopg2.connect(**self.db_params)
         except Exception as e:
@@ -39,7 +33,7 @@ class CustomerDatabase:
             self.connection.commit()
             raise e
 
-    def check_buyer_credentials(self, username, password):
+    def get_buyer_id(self, username, password):
         try:
             buyer_id = None
             with self.connection.cursor() as cursor:
@@ -60,30 +54,19 @@ class CustomerDatabase:
             self.connection.commit()
             raise e
 
-    def get_buyer_id(self, username):
-        try:
-            with self.connection.cursor() as cursor:
-                select_query = sql.SQL("SELECT id FROM buyer where username = {};").format(sql.Literal(username))
-                cursor.execute(select_query)
-                buyer_id = cursor.fetchall()[0][0]
-            self.connection.commit()
-            return buyer_id
+    # def get_buyer_id(self, username):
+    #     try:
+    #         with self.connection.cursor() as cursor:
+    #             select_query = sql.SQL("SELECT id FROM buyer where username = {};").format(sql.Literal(username))
+    #             cursor.execute(select_query)
+    #             buyer_id = cursor.fetchall()[0][0]
+    #         self.connection.commit()
+    #         return buyer_id
 
-        except Exception as e:
-            print(f"Error: Unable to Fetch Buyer Id.\n{e}")
-            self.connection.commit()
-            raise e
-
-# def read_buyer_by_id(connection,):
-#     try:
-#         with self.connection.cursor() as cursor:
-#             select_query = sql.SQL("SELECT * FROM buyers;")
-#             cursor.execute(select_query)
-#             buyers = cursor.fetchall()
-#             for buyer in buyers:
-#                 print(buyer)
-#     except Exception as e:
-#         print(f"Error: Unable to read buyers.\n{e}")
+    #     except Exception as e:
+    #         print(f"Error: Unable to Fetch Buyer Id.\n{e}")
+    #         self.connection.commit()
+    #         raise e
 
 # # Function to update a buyer
 # def update_buyer(connection, buyer_id, new_name, new_email):
@@ -116,4 +99,5 @@ class CustomerDatabase:
 
 
 # d = CustomerDatabase('customers','12345','localhost','5432','postgres')
-# d.create_buyer("username","password")
+# d.check_buyer_credentials("username","password")
+        

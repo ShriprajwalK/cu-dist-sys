@@ -1,10 +1,7 @@
 import socket
 import psycopg2
-from ..postgres.customer_database import *
-from ..postgres.product_database import *
-from ..postgres.postgres_helper import get_db
 import json
-from .server_seller_helper import *
+from seller.server_seller_helper import *
 import sys
 
 
@@ -13,16 +10,8 @@ class SellerServer:
         self.server_host = server_host
         self.server_port = server_port
 
-        self.customer_db = get_db('customer')
-        self.product_db = get_db('product')
-
-        self.server_seller_helper = SellerServerHelper(self.customer_db, self.product_db)
-        # self.databases_init()
+        self.server_seller_helper = SellerServerHelper()
         self.create_server_socket()
-
-    # def databases_init(self):
-    #    self.customer_db.database_init("init_customer.sql")
-    #    self.product_db.database_init("init_product.sql")
 
     def create_server_socket(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -55,6 +44,6 @@ class SellerServer:
 
 if __name__ == "__main__":
     server_host = "localhost"
-    server_port = 1235
+    server_port = 1234
 
-    buyer_server = SellerServer(server_host, server_port)
+    seller_server = SellerServer(server_host, server_port)

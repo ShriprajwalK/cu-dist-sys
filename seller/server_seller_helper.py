@@ -1,8 +1,9 @@
+from seller.product_database_connect import *
+
 class SellerServerHelper:
 
-    def __init__(self, customer_db, product_db):
-        self.customer_db = customer_db
-        self.product_db = product_db
+    def __init__(self):
+        self.product_db = ProductDatabaseConnection("localhost",9001)
 
     def choose_and_execute_action(self, action, data):
         response = {"action": action, "type": "seller"}
@@ -10,10 +11,8 @@ class SellerServerHelper:
         action_methods = {
             "create_account": self.create_account,
             "login": self.login,
-            "search": self.search,
         }
 
-        # Get the method based on the action
         method = action_methods[action]
 
         if method:
