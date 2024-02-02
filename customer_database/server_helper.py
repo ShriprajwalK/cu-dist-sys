@@ -75,7 +75,7 @@ class ServerHelper:
         return response_body
     
     def get_buyer_purchase(self, data):
-        buyer_id = data["body"][buyer_id]
+        buyer_id = data["body"]["buyer_id"]
         response_body = {}
 
         try:
@@ -90,8 +90,9 @@ class ServerHelper:
         item_id = data["body"]["item_id"]
         buyer_id = data["body"]["buyer_id"]
         quantity = data["body"]["quantity"]
+        price = data["body"]["price"]
         try:
-            self.dao.create_cart(item_id,buyer_id, quantity)
+            self.dao.create_cart(item_id,buyer_id, quantity, price)
             response_body = {"is_created": True}
         except Exception as e:
             print(e)
@@ -119,6 +120,7 @@ class ServerHelper:
         except Exception as e:
             print(e)
             response_body = {"item": None, "error": str(e)}
+        return response_body
 
     def update_cart_item_quantity(self, data):
         item_id = data["body"]["item_id"]
@@ -148,12 +150,15 @@ class ServerHelper:
     
     def get_buyer_cart_items(self, data):
         buyer_id = data["body"]["buyer_id"]
+        print("buyer_id",buyer_id)
         try:
             items = self.dao.get_buyer_cart_items(buyer_id)
             response_body = {"items": items}
+            print(response_body)
         except Exception as e:
             print(e)
             response_body = {"items": None, "error": str(e)}
+        return response_body
 
 
 

@@ -69,11 +69,11 @@ class Dao:
             self.connection.commit()
             raise e
         
-    def create_cart(self, item_id,buyer_id, quantity):
+    def create_cart(self, item_id,buyer_id, quantity,price):
         try:
             with self.connection.cursor() as cursor:
-                insert_query = sql.SQL("INSERT INTO shopping_cart (buyer_id, item_id,quantity) VALUES ({}, {});").format(
-                    sql.Literal(buyer_id), sql.Literal(item_id), sql.Literal(quantity)
+                insert_query = sql.SQL("INSERT INTO shopping_cart (buyer_id, item_id,quantity, price) VALUES ({}, {},{},{});").format(
+                    sql.Literal(buyer_id), sql.Literal(item_id), sql.Literal(quantity), sql.Literal(price)
                 )
                 cursor.execute(insert_query)
             self.connection.commit()
@@ -117,7 +117,7 @@ class Dao:
     def update_cart_item_quantity(self, item_id, buyer_id, quantity):
         try:
             with self.connection.cursor() as cursor:
-                update_query = sql.SQL("UPDATE shopping_cart SET quantity = {}, WHERE item_id = {} AND buyer_id = {};").format(
+                update_query = sql.SQL("UPDATE shopping_cart SET quantity = {} WHERE item_id = {} AND buyer_id = {};").format(
                     sql.Literal(quantity), sql.Literal(item_id), sql.Literal(buyer_id)
                 )
                 cursor.execute(update_query)
@@ -144,6 +144,7 @@ class Dao:
         
     def get_buyer_cart_items(self, buyer_id):
         try:
+            print("SELECT * FROM shopping_cart where buyer_id =")
             with self.connection.cursor() as cursor:
                 insert_query = sql.SQL("SELECT * FROM shopping_cart where buyer_id = {}").format(
                     sql.Literal(buyer_id))

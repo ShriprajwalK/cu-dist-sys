@@ -144,11 +144,26 @@ class Dao:
             with self.connection.cursor() as cursor:
                 insert_query = sql.SQL("SELECT price FROM item where id = {};").format(sql.Literal(item_id))
                 cursor.execute(insert_query)
-                item = cursor.fetchall()[0]
+                item = cursor.fetchall()[0][0]
                 print(item)
             self.connection.commit()
             return item
         except Exception as e:
             print(f"Error: Unable to Fetch Seller Id.\n{e}")
+            self.connection.commit()
+            raise e
+        
+    def get_seller_rating(self, seller_id):
+        try:
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("SELECT rating FROM seller where id = {}").format(
+                    sql.Literal(seller_id))
+                cursor.execute(insert_query)
+                rating = cursor.fetchall()[0][0]
+            self.connection.commit()
+            return rating
+
+        except Exception as e:
+            print(f"Error: Unable to Fetch Item From Cart.\n{e}")
             self.connection.commit()
             raise e

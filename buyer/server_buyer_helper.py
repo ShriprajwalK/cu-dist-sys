@@ -23,13 +23,15 @@ class BuyerServerHelper:
             "create_account": self.create_account,
             "login": self.login,
             "search": self.search,
-            "get_rating": self.cart_add,
             "get_all_items": self.get_all_items,
             "item_rating": self.item_rating,
             "get_purchase_history":self.get_purchase_history,
             "cart_clear":self.cart_clear,
             "cart_remove":self.cart_remove,
-            "cart_display":self.cart_display
+            "cart_display":self.cart_display,
+            "cart_add":self.cart_add,
+            "seller_rating":self.seller_rating,
+            "cart_save":self.cart_save
         }
 
         # Get the method based on the action
@@ -133,6 +135,7 @@ class BuyerServerHelper:
             
             item = self.product_db.get_item_by_id(item_id)
             available_quantity = item[2]
+            print("available_quantity:",available_quantity)
             if requested_quantity >= available_quantity:
                 return {"add": False, "message": "Requested Quantity Not Present in the Database"}
             
@@ -152,6 +155,7 @@ class BuyerServerHelper:
         buyer_id = data["body"]["buyer_id"]
         response_body = {"items": []}
         try:
+            print("buyer_id",buyer_id)
             purchased_items = self.customer_db.get_purchase_history(buyer_id)
 
             for purchased_item in purchased_items:
@@ -221,17 +225,45 @@ class BuyerServerHelper:
         
     def cart_display(self, data):
         buyer_id = data["body"]["buyer_id"]
+        response_body = {"items":[]}
         try:
-            item_map = {}
+           
             cart_items = self.customer_db.get_buyer_cart_items(buyer_id)
             for item in cart_items:
+                item_map = {}
                 item_map["item_id"] = item[2]
                 item_map["quantity"] = item[3]
                 item_map["price"] = item[4]
-            return {"items":item_map}
+                response_body["items"].append(item_map)
+            return response_body
+                
         except Exception as e:
             print(e)
             return {"items":None}
+
+    def seller_rating(self,data):
+        seller_id = data["body"]["seller_id"]
+        response_body = {"rating":None}
+        try:
+           
+            rating = self.product_db.get_seller_rating(seller_id)
+            response_body["rating"] = rating
+            return response_body
+                
+        except Exception as e:
+            print(e)
+            return response_body
+        
+    def cart_save(self, data):
+        buyer_id = data["body"]["buyer_id"]
+        response_body = {"saved":False}
+        try:
+            response_body["saved"] = True
+            return response_body
+                
+        except Exception as e:
+            print(e)
+            return response_body
 
 
 

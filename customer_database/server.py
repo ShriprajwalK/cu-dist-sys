@@ -29,6 +29,7 @@ class Server:
 
     def handle_client_request(self, client_socket):
         data = client_socket.recv(1024).decode('utf-8')
+        print("DATA1",data)
         parsed_data = json.loads(data)
         print(f"Received data from client: {data}")
         action = parsed_data['action']

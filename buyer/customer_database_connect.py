@@ -27,13 +27,13 @@ class CustomerDatabaseConnection:
         return buyer_created
 
     def get_purchase_history(self,buyer_id):
-        request = {"action":"get_buyer_purchase",'body': {"buyer_id",buyer_id}}
+        request = {"action":"get_buyer_purchase",'body': {"buyer_id":buyer_id}}
         response = self.send_request(request)
         items = response["body"]["items"]
         return items
     
-    def add_to_cart(self,item_id,buyer_id, quantity):
-        request = {"action":"create_cart",'body': {"buyer_id": buyer_id, "item_id": item_id, 'quantity': quantity}}
+    def add_to_cart(self,item_id,buyer_id, quantity,price):
+        request = {"action":"create_cart",'body': {"buyer_id": buyer_id, "item_id": item_id, 'quantity': quantity,"price":price}}
         response = self.send_request(request)
         success = response["body"]["is_created"]
         return success
@@ -47,7 +47,7 @@ class CustomerDatabaseConnection:
     def remove_cart_item(self, item_id, buyer_id):
         request = {"action":"remove_cart_item",'body': {"buyer_id": buyer_id, "item_id": item_id}}
         response = self.send_request(request)
-        success = response["body"]["deleted"]
+        success = response["body"]["removed"]
         return success
     
     def get_cart_item(self, item_id, buyer_id):

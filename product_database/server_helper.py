@@ -28,7 +28,8 @@ class ServerHelper:
             "get_item_seller_id":self.get_item_seller_id,
             "update_seller_rating":self.update_seller_rating,
             "get_item_by_id":self.get_item_by_id,
-            "get_item_price":self.get_item_price
+            "get_item_price":self.get_item_price,
+            "get_seller_rating":self.get_seller_rating
         }
 
         # Get the method based on the action
@@ -82,7 +83,7 @@ class ServerHelper:
     def get_item_by_id(self, data):
         item_id = data["body"]["item_id"]
         try:
-            item = self.dao.get_item_by_id()
+            item = self.dao.get_item_by_id(item_id)
             response_body = {"item": item}
         except Exception as e:
             response_body = {"item": None}
@@ -126,5 +127,16 @@ class ServerHelper:
             response_body = {"price": price}
         except Exception as e:
             response_body = {"price": None}
+        return response_body
+    
+
+    def get_seller_rating(self, data):
+        seller_id = data["body"]["seller_id"]
+        try:
+            rating = self.dao.get_seller_rating(seller_id)
+            response_body = {"rating": rating}
+        except Exception as e:
+            print(e)
+            response_body = {"rating": None, "error": str(e)}
         return response_body
 

@@ -133,10 +133,14 @@ class BuyerClient:
         else:
             print("Cart not Cleared")
 
-
-    # def cart_save(self):
-    #     request = {"action": "cart_save", "type": "buyer", 'body': {}}
-    #     return self.send_request(request)
+    def cart_save(self):
+        request = {"action": "cart_save", "type": "buyer", 'body': {"buyer_id":self.id}}
+        response = self.send_request(request)
+        response_body = response["body"]
+        if(response_body["saved"]):
+            print("Cart Saved")
+        else:
+            print("Cart not Saved")
 
     def provide_feedback(self):
         request = {"action": "get_purchase_history", "type": "buyer", 'body': {"buyer_id":self.id}}
@@ -162,9 +166,15 @@ class BuyerClient:
             print("Feedback Not stored. Try Again")
 
 
-    def seller_rating(self, seller_id):
-        request = {"action": "seller_rating", "type": "buyer", 'body': {'id': seller_id}}
-        return self.send_request(request)
+    def seller_rating(self):
+        seller_id = int(input("Seller Id: "))
+        request = {"action": "seller_rating", "type": "buyer", 'body': {'seller_id': seller_id}}
+        response = self.send_request(request)
+
+        if(response["body"]["rating"]==None):
+            print("Seller Id does not exist")
+        else:
+            print("Seller Rating:", response["body"]["rating"])
 
     def history(self):
         request = {"action": "get_purchase_history", "type": "buyer", 'body': {"buyer_id":self.id}}
@@ -180,6 +190,7 @@ class BuyerClient:
                 item_id = item["item_id"]
                 quantity = item["quantity"]
                 table.add_row([item_id, quantity])
+            print(table, "\n")
 
     def make_purchase(self):
         #TBD
@@ -203,7 +214,7 @@ if __name__ == "__main__":
                 print("Give Appropriate Action Number")
                 continue
         else:
-            print("1. Create Account \n2. Logout \n3. Search Items \n4. Add Items to Cart \n5. Remote Item From Cart \
+            print("1. Create Account \n2. Logout \n3. Search Items \n4. Add Items to Cart \n5. Remove Item From Cart \
                   \n6. Display Cart \n7. Clear the Cart \n8. Save the Cart \n9. Provide Item Feedback \n10. Display Seller Rating \
                   \n11. Display Buyer Purchase History \n12. Purchase the Items\n")
             action_number = int(input("Action Number: "))

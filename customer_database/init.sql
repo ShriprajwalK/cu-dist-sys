@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS shopping_cart (
     buyer_id INTEGER,
     item_id INTEGER UNIQUE,
     quantity INTEGER,
-    price INTEGER
+    price INTEGER,
     FOREIGN KEY(buyer_id) REFERENCES buyer(id)
     -- FOREIGN KEY(product_id) REFERENCES products(id)
 );

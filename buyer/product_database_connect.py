@@ -49,3 +49,8 @@ class ProductDatabaseConnection:
         price = response["body"]["price"]
         return price
     
+    def get_seller_rating(self, seller_id):
+        request = {"action":"get_seller_rating",'body': {"seller_id":seller_id}}
+        response = self.send_request(request)
+        rating = response["body"]["rating"]
+        return rating
