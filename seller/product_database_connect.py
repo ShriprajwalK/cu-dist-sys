@@ -25,4 +25,10 @@ class ProductDatabaseConnection:
         response = self.send_request(request)
         seller_created = response["body"]["is_created"]
         return seller_created
+    
+    def get_all_items(self):
+        request = {"action":"get_all_items",'body': {}}
+        response = self.send_request(request)
+        items = response["body"]["items"]
+        return items
         

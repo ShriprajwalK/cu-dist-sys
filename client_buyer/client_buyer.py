@@ -57,7 +57,6 @@ class BuyerClient:
         request = {"action": "login", "type": "buyer", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
 
-        print(response)
         if 'error' in response['body']:
             print("Login Unsuccessful : ", response["body"]["error"], "\n")
         else:
@@ -91,68 +90,100 @@ class BuyerClient:
     def cart_add(self):
         item_id = int(input("Item Id: "))
         quantity = int(input("Quantity: "))
-        request = {"action": "cart_add", "type": "buyer", 'body': {"item_id": item_id, 'quantity': quantity}}
+        request = {"action": "cart_add", "type": "buyer", 'body': {"buyer_id": self.id, "item_id": item_id, 'quantity': quantity}}
         response = self.send_request(request)
 
         response_body = response["body"]
 
         if response_body["add"]:
-            self.cart.append(response_body["item_details"])
             print("Item Added to the Cart", "\n")
         else:
-            print("Could Not add to the because:", response_body["Reason"], "\n")
+            print("Could Not add to the because:", response_body["message"], "\n")
 
-    def cart_remove(self, item, num):
-        # request = {"action": "cart_remove", "type": "buyer", 'body': { "item": item, 'quantity': num}}
-        # return self.send_request(request)
+    def cart_remove(self):
         item_id = int(input("Item Id: "))
         quantity = int(input("Quantity: "))
-        item_removed = False
-        for item_num in range(len(self.cart)):
-            if self.cart[item_num][0] == item_id:
-                self.cart[item_num][1] -= quantity
-                if self.cart[item_num][1] <= 0:
-                    self.cart.pop(item_num)
-                item_removed = True
-
-        if item_removed:
+        request = {"action": "cart_remove", "type": "buyer", 'body': { "buyer_id": self.id, "item_id": item_id, 'quantity': quantity}}
+        response = self.send_request(request)
+        response_body = response["body"]
+        if response_body['removed']:
             print("Item Successfully Removed")
         else:
             print("Item Not Found in the Cart")
 
     def cart_display(self):
-        # request = {"action": "cart_display", "type": "buyer", 'body': {}}
-        # return self.send_request(request)
-        table = PrettyTable(["Id", "Quantity", "Price"])
-        for item in self.cart:
-            table.add_row([item[0], item[1], item[2]])
-
-        print(table, "\n")
+        request = {"action": "cart_display", "type": "buyer", 'body': {"buyer_id": self.id}}
+        response = self.send_request(request)
+        response_body = response["body"]
+        items = response_body["items"] 
+        if(len(items)==0 or items== None):
+            print("No items in the cart")
+        else:
+            table = PrettyTable(["Id", "Quantity", "Price"])
+            for item in items:
+                table.add_row([item["item_id"], item["quantity"], item["price"]])
+            print(table, "\n")
 
     def cart_clear(self):
-        # request = {"action": "cart_clear", "type": "buyer", 'body': {}}
-        # return self.send_request(request)
-        self.cart = []
-        print("Cart Cleared")
+        request = {"action": "cart_clear", "type": "buyer", 'body': {"buyer_id":self.id}}
+        response = self.send_request(request)
+        response_body = response["body"]
+        if(response_body["cleared"]):
+            print("Cart Cleared")
+        else:
+            print("Cart not Cleared")
 
-    def cart_save(self):
-        request = {"action": "cart_save", "type": "buyer", 'body': {}}
-        return self.send_request(request)
 
-    def provide_feedback(self, item, feedback):
-        request = {"action": "feedback", "type": "buyer", 'body': {'item': item, 'feedback': feedback}}
-        return self.send_request(request)
+    # def cart_save(self):
+    #     request = {"action": "cart_save", "type": "buyer", 'body': {}}
+    #     return self.send_request(request)
+
+    def provide_feedback(self):
+        request = {"action": "get_purchase_history", "type": "buyer", 'body': {"buyer_id":self.id}}
+        response = self.send_request(request)
+        response_body = response['body']
+        items = response_body["items"]
+        if(items==None or len(items)==0):
+            print("No items purchased")
+            return
+        else:
+            item_rating = {}
+            for item in items:
+                item_id = item["item_id"]
+                rating = int(input("Provide Feedback (0 or 1) for item Id: ",item_id))
+                item_rating[item_id] = rating
+
+        request = {"action": "item_rating", "type": "buyer", 'body': {"rating":item_rating}}
+        response = self.send_request(request)
+
+        if(response["body"]["success"]==True):
+            print("Feedback Stored")
+        else:
+            print("Feedback Not stored. Try Again")
+
 
     def seller_rating(self, seller_id):
         request = {"action": "seller_rating", "type": "buyer", 'body': {'id': seller_id}}
         return self.send_request(request)
 
     def history(self):
-        request = {"action": "seller_rating", "type": "buyer", 'body': {}}
-        return self.send_request(request)
+        request = {"action": "get_purchase_history", "type": "buyer", 'body': {"buyer_id":self.id}}
+        response = self.send_request(request)
+        response_body = response['body']
+        items = response_body["items"]
+        if(items==None or len(items)==0):
+            print("No items purchased")
+            return
+        else:
+            table = PrettyTable(["Id", "Quantity"])
+            for item in response_body["items"]:
+                item_id = item["item_id"]
+                quantity = item["quantity"]
+                table.add_row([item_id, quantity])
 
     def make_purchase(self):
-        # We will have to implement this anyway to test history, feedback and seller rating.
+        #TBD
+        # # We will have to implement this anyway to test history, feedback and seller rating.
         request = {"action": 'purchase', 'type': 'buyer', 'body': {}}
         return self.send_request(request)
 

@@ -8,14 +8,9 @@ class BuyerServer:
     def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
-        # self.product_db = get_db('product')
 
         self.server_buyer_helper = BuyerServerHelper()
         self.create_server_socket()
-
-    # def databases_init(self):
-    #    self.customer_db.database_init("init_customer.sql")
-    #    self.product_db.database_init("init_product.sql")
 
     def create_server_socket(self):
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -32,14 +27,11 @@ class BuyerServer:
             print("\nCtrl+C pressed. Shutting down.")
             server_socket.close()
             sys.exit(0)
-
     def handle_client_request(self, client_socket):
         data = client_socket.recv(1024).decode('utf-8')
         parsed_data = json.loads(data)
         print(f"Received data from client: {data}")
-        action = parsed_data['action']
-
-        # return self.choose_and_execute_action(action,client_socket,parsed_data)
+        action = parsed_data['action'] 
         response = self.server_buyer_helper.choose_and_execute_action(action, parsed_data)
         print("response", response)
         client_socket.send(json.dumps(response).encode('utf-8'))

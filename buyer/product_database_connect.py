@@ -18,4 +18,34 @@ class ProductDatabaseConnection:
         response = self.send_request(request)
         items = response["body"]["items"]
         return items
-        
+    
+    def get_item_by_id(self, item_id):
+        request = {"action":"get_item_by_id",'body': {"item_id":item_id}}
+        response = self.send_request(request)
+        item = response["body"]["item"]
+        return item
+    
+    def update_item_rating(self, item_id,item_rating):
+        request = {"action":"update_item_rating",'body': {"item_id":item_id,"item_rating":item_rating}}
+        response = self.send_request(request)
+        success = response["body"]["success"]
+        return success
+    
+    def get_item_seller_id(self, item_id):
+        request = {"action":"get_item_seller_id",'body': {"item_id":item_id}}
+        response = self.send_request(request)
+        seller_id = response["body"]["seller_id"]
+        return seller_id
+    
+    def update_seller_rating(self, seller_id,item_rating):
+        request = {"action":"update_item_rating",'body': {"seller_id":seller_id,"item_rating":item_rating}}
+        response = self.send_request(request)
+        success = response["body"]["success"]
+        return success
+    
+    def get_item_price(self, item_id):
+        request = {"action":"get_item_price",'body': {"item_id":item_id}}
+        response = self.send_request(request)
+        price = response["body"]["price"]
+        return price
+    

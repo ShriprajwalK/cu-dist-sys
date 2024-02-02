@@ -23,7 +23,12 @@ class ServerHelper:
         action_methods = {
             "create_seller": self.create_seller,
             "get_seller_id": self.get_seller_id,
-            "get_all_items":self.get_all_items
+            "get_all_items":self.get_all_items,
+            "update_item_rating":self.update_item_rating,
+            "get_item_seller_id":self.get_item_seller_id,
+            "update_seller_rating":self.update_seller_rating,
+            "get_item_by_id":self.get_item_by_id,
+            "get_item_price":self.get_item_price
         }
 
         # Get the method based on the action
@@ -73,24 +78,53 @@ class ServerHelper:
         except Exception as e:
             response_body = {"items": None}
         return response_body
+    
+    def get_item_by_id(self, data):
+        item_id = data["body"]["item_id"]
+        try:
+            item = self.dao.get_item_by_id()
+            response_body = {"item": item}
+        except Exception as e:
+            response_body = {"item": None}
+        return response_body
+    
+    def update_item_rating(self, data):
+        item_id = data["body"]["item_id"]
+        item_rating = data["body"]["item_rating"]
 
+        try:
+            self.dao.update_item_rating(item_id, item_rating)
+            response_body = {"success": True}
+        except Exception as e:
+            response_body = {"success": False, "error": str(e)}
+        return response_body
+    
+    def get_item_seller_id(self, data):
+        item_id = data["body"]["item_id"]
+        try:
+            seller_id = self.dao.get_item_seller_id(item_id)
+            response_body = {"seller_id": seller_id}
+        except Exception as e:
+            response_body = {"seller_id": None}
+        return response_body
+    
+    def update_seller_rating(self, data):
+        seller_id = data["body"]["seller_id"]
+        item_rating = data["body"]["item_rating"]
 
-    # def cart_add(self, data):
-    #     item_id = data["body"]["item_id"]
-    #     requested_quantity = data["body"]["quantity"]
-    #     response_body = {}
+        try:
+            self.dao.update_seller_rating(seller_id, item_rating)
+            response_body = {"success": True}
+        except Exception as e:
+            response_body = {"success": False, "error": str(e)}
+        return response_body
+    
+    def get_item_price(self, data):
+        item_id = data["body"]["item_id"]
+        try:
+            price = self.dao.get_item_price(item_id)
+            response_body = {"price": price}
+        except Exception as e:
+            response_body = {"price": None}
+        return response_body
 
-    #     try:
-    #         item = self.product_db.get_item_by_id(item_id)
-    #         available_quantity = item[2]
-    #         price = item[3]
-    #         if requested_quantity >= available_quantity:
-    #             return {"add": False, "message": "Requested Quantity Not Present in the Database"}
-
-    #         item_details = [item_id, requested_quantity, price]
-
-    #         response_body = {"add": True, "item_details": item_details, "message": "Item added to cart"}
-    #         return response_body
-    #     except Exception as e:
-    #         print(e)
-    #         return {"add": False, "message": "Item Not Present in the Database"}
