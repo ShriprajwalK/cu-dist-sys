@@ -10,6 +10,8 @@ CREATE TABLE IF NOT EXISTS shopping_cart (
     id SERIAL PRIMARY KEY,
     buyer_id INTEGER,
     item_id INTEGER UNIQUE,
+    quantity INTEGER,
+    price INTEGER,
     FOREIGN KEY(buyer_id) REFERENCES buyer(id)
     -- FOREIGN KEY(product_id) REFERENCES products(id)
 );
@@ -18,6 +20,7 @@ CREATE TABLE IF NOT EXISTS purchase (
     id SERIAL PRIMARY KEY,
     buyer_id INTEGER,
     item_id INTEGER UNIQUE,
+    quantity INTEGER,
     FOREIGN KEY(buyer_id) REFERENCES buyer(id)
     -- FOREIGN KEY(product_id) REFERENCES products(id)
 );

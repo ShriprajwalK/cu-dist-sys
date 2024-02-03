@@ -25,10 +25,47 @@ class CustomerDatabaseConnection:
         response = self.send_request(request)
         buyer_created = response["body"]["is_created"]
         return buyer_created
-    
-    def get_all_items(self):
-        request = {"action":"get_all_items",'body': {}}
+
+    def get_purchase_history(self,buyer_id):
+        request = {"action":"get_buyer_purchase",'body': {"buyer_id":buyer_id}}
         response = self.send_request(request)
         items = response["body"]["items"]
         return items
+    
+    def add_to_cart(self,item_id,buyer_id, quantity,price):
+        request = {"action":"create_cart",'body': {"buyer_id": buyer_id, "item_id": item_id, 'quantity': quantity,"price":price}}
+        response = self.send_request(request)
+        success = response["body"]["is_created"]
+        return success
+    
+    def delete_cart_by_buyer_id(self, buyer_id):
+        request = {"action":"delete_cart_by_buyer_id",'body': {"buyer_id": buyer_id}}
+        response = self.send_request(request)
+        success = response["body"]["deleted"]
+        return success
+    
+    def remove_cart_item(self, item_id, buyer_id):
+        request = {"action":"remove_cart_item",'body': {"buyer_id": buyer_id, "item_id": item_id}}
+        response = self.send_request(request)
+        success = response["body"]["removed"]
+        return success
+    
+    def get_cart_item(self, item_id, buyer_id):
+        request = {"action":"get_cart_item",'body': {"buyer_id": buyer_id, "item_id": item_id}}
+        response = self.send_request(request)
+        item = response["body"]["item"]
+        return item
+    
+    def update_cart_item_quantity(self, item_id, buyer_id, quantity):
+        request = {"action":"update_cart_item_quantity",'body': {"buyer_id": buyer_id, "item_id": item_id, 'quantity': quantity}}
+        response = self.send_request(request)
+        success = response["body"]["updated"]
+        return success
+    
+    def get_buyer_cart_items(self, buyer_id):
+        request = {"action":"get_buyer_cart_items",'body': {"buyer_id":buyer_id}}
+        response = self.send_request(request)
+        items = response["body"]["items"]
+        return items
+        
         

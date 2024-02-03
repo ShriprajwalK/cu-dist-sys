@@ -53,51 +53,109 @@ class Dao:
             print(f"Error: Unable to find Buyer's Credentials.\n{e}")
             self.connection.commit()
             raise e
-
-    # def get_buyer_id(self, username):
-    #     try:
-    #         with self.connection.cursor() as cursor:
-    #             select_query = sql.SQL("SELECT id FROM buyer where username = {};").format(sql.Literal(username))
-    #             cursor.execute(select_query)
-    #             buyer_id = cursor.fetchall()[0][0]
-    #         self.connection.commit()
-    #         return buyer_id
-
-    #     except Exception as e:
-    #         print(f"Error: Unable to Fetch Buyer Id.\n{e}")
-    #         self.connection.commit()
-    #         raise e
-
-# # Function to update a buyer
-# def update_buyer(connection, buyer_id, new_name, new_email):
-#     try:
-#         with self.connection.cursor() as cursor:
-#             update_query = sql.SQL("UPDATE buyers SET name = {}, email = {} WHERE id = {};").format(
-#                 sql.Literal(new_name), sql.Literal(new_email), sql.Literal(buyer_id)
-#             )
-#             cursor.execute(update_query)
-#         self.connection.commit()
-#         print("buyer updated successfully.")
-#     except Exception as e:
-#         print(f"Error: Unable to update buyer.\n{e}")
-
-# # Function to delete a buyer
-# def delete_buyer(connection, buyer_id):
-#     try:
-#         with self.connection.cursor() as cursor:
-#             delete_query = sql.SQL("DELETE FROM buyers WHERE id = {};").format(sql.Literal(buyer_id))
-#             cursor.execute(delete_query)
-#         self.connection.commit()
-#         print("buyer deleted successfully.")
-#     except Exception as e:
-#         print(f"Error: Unable to delete buyer.\n{e}")
-
-# connection = connect()
-# print(check_buyer_credentials(connection, "r", "r"))
-# print(create_buyer(conn,"g","g"))
-# # print(type(get_inserted_id(conn)))
-
-
-# d = CustomerDatabase('customers','12345','localhost','5432','postgres')
-# d.check_buyer_credentials("username","password")
         
+    def get_buyer_purchase(self, buyer_id):
+        try:
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("SELECT * FROM purchase where buyer_id = {}").format(
+                    sql.Literal(buyer_id))
+                cursor.execute(insert_query)
+                item_list = cursor.fetchall()
+            self.connection.commit()
+            return item_list
+
+        except Exception as e:
+            print(f"Error: Unable to Fetch Items.\n{e}")
+            self.connection.commit()
+            raise e
+        
+    def create_cart(self, item_id,buyer_id, quantity,price):
+        try:
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("INSERT INTO shopping_cart (buyer_id, item_id,quantity, price) VALUES ({}, {},{},{});").format(
+                    sql.Literal(buyer_id), sql.Literal(item_id), sql.Literal(quantity), sql.Literal(price)
+                )
+                cursor.execute(insert_query)
+            self.connection.commit()
+            print("Added Item to Cart successfully.")
+
+        except Exception as e:
+            print(f"Error: Unable to Add to Cart.\n{e}")
+            self.connection.commit()
+            raise e
+        
+    def delete_cart_by_buyer_id(self, buyer_id):
+        try:
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("DELETE FROM shopping_cart WHERE buyer_id = {};").format(
+                    sql.Literal(buyer_id)
+                )
+                cursor.execute(insert_query)
+            self.connection.commit()
+            print("Deleted Items From Cart successfully.")
+
+        except Exception as e:
+            print(f"Error: Unable to Delete from Cart.\n{e}")
+            self.connection.commit()
+            raise e
+        
+    def get_cart_item(self, item_id, buyer_id):
+        try:
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("SELECT * FROM shopping_cart where buyer_id = {} AND item_id = {}").format(
+                    sql.Literal(buyer_id),sql.Literal(item_id))
+                cursor.execute(insert_query)
+                item = cursor.fetchall()[0]
+            self.connection.commit()
+            return item
+
+        except Exception as e:
+            print(f"Error: Unable to Fetch Item From Cart.\n{e}")
+            self.connection.commit()
+            raise e
+        
+    def update_cart_item_quantity(self, item_id, buyer_id, quantity):
+        try:
+            with self.connection.cursor() as cursor:
+                update_query = sql.SQL("UPDATE shopping_cart SET quantity = {} WHERE item_id = {} AND buyer_id = {};").format(
+                    sql.Literal(quantity), sql.Literal(item_id), sql.Literal(buyer_id)
+                )
+                cursor.execute(update_query)
+            self.connection.commit()
+            print("Cart Item Quantity updated successfully.")
+        except Exception as e:
+            print(f"Error: Unable to update Cart Item's Quantity.\n{e}")
+
+
+    def remove_cart_item(self, item_id, buyer_id):
+        try:
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("DELETE FROM shopping_cart WHERE  buyer_id = {} AND item_id = {};").format(
+                    sql.Literal(buyer_id), sql.Literal(item_id)
+                )
+                cursor.execute(insert_query)
+            self.connection.commit()
+            print("Deleted Item From Cart successfully.")
+
+        except Exception as e:
+            print(f"Error: Unable to Delete Item from Cart.\n{e}")
+            self.connection.commit()
+            raise e
+        
+    def get_buyer_cart_items(self, buyer_id):
+        try:
+            print("SELECT * FROM shopping_cart where buyer_id =")
+            with self.connection.cursor() as cursor:
+                insert_query = sql.SQL("SELECT * FROM shopping_cart where buyer_id = {}").format(
+                    sql.Literal(buyer_id))
+                cursor.execute(insert_query)
+                items = cursor.fetchall()
+            self.connection.commit()
+            return items
+
+        except Exception as e:
+            print(f"Error: Unable to Fetch Item From Cart.\n{e}")
+            self.connection.commit()
+            raise e
+
+

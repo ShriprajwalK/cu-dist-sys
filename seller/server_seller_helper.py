@@ -10,7 +10,7 @@ class SellerServerHelper:
 
         action_methods = {
             "create_account": self.create_account,
-            "login": self.login,
+            "login": self.login
         }
 
         method = action_methods[action]
@@ -54,4 +54,5 @@ class SellerServerHelper:
 
     def logout(self, data):
         pass
+        
 
