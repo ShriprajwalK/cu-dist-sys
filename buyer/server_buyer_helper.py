@@ -241,7 +241,7 @@ class BuyerServerHelper:
             print(e)
             return {"items":None}
 
-    def seller_rating(self,data):
+    def seller_rating(self, data):
         seller_id = data["body"]["seller_id"]
         response_body = {"rating":None}
         try:
