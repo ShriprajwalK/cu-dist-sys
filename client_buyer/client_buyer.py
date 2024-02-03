@@ -1,6 +1,7 @@
 import socket
 import json
 from prettytable import PrettyTable
+import time
 
 
 class BuyerClient:
@@ -44,6 +45,7 @@ class BuyerClient:
         username = input("New Username: ")
         password = input("New Password: ")
         request = {"action": "create_account", "type": "buyer", 'body': {"username": username, "password": password}}
+        print(request)
         response = self.send_request(request)
 
         if 'error' in response['body']:
@@ -201,7 +203,11 @@ class BuyerClient:
 
 if __name__ == "__main__":
     buyer = BuyerClient('127.0.0.1', 1234)
+    operation = 0
+    response_time = 0
+
     while True:
+        start_time = time.time()
         if not buyer.check_state():
             print("1. Create Account \n2. Login \n")
             action_number = int(input("Action Number: "))
@@ -210,9 +216,12 @@ if __name__ == "__main__":
                 buyer.create_account()
             elif action_number == 2:
                 buyer.login()
+            elif action_number == 3:
+                break
             else:
                 print("Give Appropriate Action Number")
                 continue
+            
         else:
             print("1. Create Account \n2. Logout \n3. Search Items \n4. Add Items to Cart \n5. Remove Item From Cart \
                   \n6. Display Cart \n7. Clear the Cart \n8. Save the Cart \n9. Provide Item Feedback \n10. Display Seller Rating \
@@ -243,3 +252,18 @@ if __name__ == "__main__":
                 buyer.history()
             elif action_number == 12:
                 buyer.make_purchase()
+            elif action_number == 13:
+                break
+
+        operation+=1
+        end_time = time.time()
+        response_time+=end_time-start_time
+
+    client_end_time = time.time()
+    avg_response_time = response_time/operation
+
+    print(f'Response Time: {avg_response_time} secs')
+
+    file1 = open("response_time.txt", "a")  # append mode
+    file1.write(str(avg_response_time)+"\n")
+    file1.close()
