@@ -154,9 +154,9 @@ class BuyerClient:
             item_rating = {}
             for item in items:
                 item_id = item["item_id"]
-                rating = int(input("Provide Feedback (0 or 1) for item Id: ",item_id))
-                item_rating[item_id] = rating
-
+                intput_string = "Provide Feedback (0 or 1) for item Id "+str(item_id) + ": "
+                rating = int(input(intput_string))
+                item_rating[int(item_id)] = rating
         request = {"action": "item_rating", "type": "buyer", 'body': {"rating":item_rating}}
         response = self.send_request(request)
 

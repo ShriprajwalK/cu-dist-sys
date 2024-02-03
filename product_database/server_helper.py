@@ -19,6 +19,7 @@ class ServerHelper:
         response = {"action": action}
 
         response_body = {}
+        print("data::",data)
 
         action_methods = {
             "create_seller": self.create_seller,
@@ -90,8 +91,10 @@ class ServerHelper:
         return response_body
     
     def update_item_rating(self, data):
+        print(data)
         item_id = data["body"]["item_id"]
         item_rating = data["body"]["item_rating"]
+        print("In item rating")
 
         try:
             self.dao.update_item_rating(item_id, item_rating)
@@ -112,6 +115,7 @@ class ServerHelper:
     def update_seller_rating(self, data):
         seller_id = data["body"]["seller_id"]
         item_rating = data["body"]["item_rating"]
+        print("In seller rating")
 
         try:
             self.dao.update_seller_rating(seller_id, item_rating)

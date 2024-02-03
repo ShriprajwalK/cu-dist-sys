@@ -171,16 +171,23 @@ class BuyerServerHelper:
     
     def item_rating(self,data):
         item_rating_map = data["body"]["rating"]
+        new_item_rating_map = {}
+        for item in item_rating_map.keys():
+                new_item_rating_map[int(item)] = item_rating_map[item]
         try:
+            
             items = self.product_db.get_all_items()
+            print("items",items)
             for item in items:
                 item_id = item[0]
-                item_rating = item[1] 
-                if(item_id in item_rating_map.keys()):
-                    item_rating += item_rating_map[item_id]
+                item_rating = item[4] 
+                if(item_id in new_item_rating_map.keys()):
+                    print()
+                    item_rating += new_item_rating_map[item_id]
+                    print("item_id,item_rating",item_id,item_rating)
                     self.product_db.update_item_rating(item_id,item_rating)
                     seller_id = self.product_db.get_item_seller_id(item_id)
-                    self.product_db.update_seller_rating(seller_id,item_rating)
+                    self.product_db.update_seller_rating(seller_id,new_item_rating_map[item_id])
             return {"success":True}
         except Exception as e:
             print(e)

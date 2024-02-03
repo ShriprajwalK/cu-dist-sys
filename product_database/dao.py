@@ -102,12 +102,13 @@ class Dao:
     def get_item_seller_id(self, item_id):
         try:
             with self.connection.cursor() as cursor:
+                print("In database item_id",item_id)
                 insert_query = sql.SQL("SELECT seller_id FROM item where id = {};").format(sql.Literal(item_id))
                 cursor.execute(insert_query)
-                item = cursor.fetchall()[0]
-                print(item)
+                seller_id = cursor.fetchall()[0][0]
+                print("Seller ID : ",seller_id)
             self.connection.commit()
-            return item
+            return seller_id
         except Exception as e:
             print(f"Error: Unable to Fetch Seller Id.\n{e}")
             self.connection.commit()
@@ -116,20 +117,20 @@ class Dao:
     def update_item_rating(self, item_id, item_rating):
         try:
             with self.connection.cursor() as cursor:
-                update_query = sql.SQL("UPDATE item SET rating = {}, WHERE id = {};").format(
+                update_query = sql.SQL("UPDATE item SET rating = {} WHERE id = {};").format(
                     sql.Literal(item_rating), sql.Literal(item_id)
                 )
                 cursor.execute(update_query)
             self.connection.commit()
-            print("buyer updated successfully.")
+            print("Item Rating updated successfully.")
         except Exception as e:
-            print(f"Error: Unable to update buyer.\n{e}")
+            print(f"Error: Unable to Update Item Rating.\n{e}")
 
 
     def update_seller_rating(self, seller_id, item_rating):
         try:
             with self.connection.cursor() as cursor:
-                update_query = sql.SQL("UPDATE seller SET rating = rating + {}, WHERE id = {};").format(
+                update_query = sql.SQL("UPDATE seller SET rating = rating + {} WHERE id = {};").format(
                     sql.Literal(item_rating), sql.Literal(seller_id)
                 )
                 cursor.execute(update_query)
