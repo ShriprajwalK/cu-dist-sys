@@ -44,6 +44,6 @@ class SellerServer:
 
 if __name__ == "__main__":
     server_host = "localhost"
-    server_port = 1234
+    server_port = 1345
 
     seller_server = SellerServer(server_host, server_port)

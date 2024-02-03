@@ -4,16 +4,17 @@ CREATE TABLE IF NOT EXISTS seller (
     id SERIAL PRIMARY KEY,
     username TEXT UNIQUE,
     password TEXT,
-    rating NUMERIC DEFAULT 0,
-    items_sold INTEGER DEFAULT 0
+    rating  INTEGER DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS item (
+    name VARCHAR(32) NOT NULL,
     id SERIAL PRIMARY KEY,
     seller_id INTEGER,
     quantity INTEGER,
-    price NUMERIC,
-    rating NUMERIC DEFAULT 0,
+    price REAL,
+    rating INTEGER DEFAULT 0,
     description TEXT,
+    category INTEGER NOT NULL,
     FOREIGN KEY(seller_id) REFERENCES seller(id)
 );

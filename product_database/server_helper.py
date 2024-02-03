@@ -13,7 +13,7 @@ def jaccard_similarity(x, y):
 class ServerHelper:
     def __init__(self):
         self.dao = Dao(get_db_credentials())
-        self.dao.database_init("./product_database/init.sql")
+        # self.dao.database_init("./product_database/init.sql")
 
     def choose_and_execute_action(self, action, data):
         response = {"action": action}
@@ -29,7 +29,11 @@ class ServerHelper:
             "update_seller_rating":self.update_seller_rating,
             "get_item_by_id":self.get_item_by_id,
             "get_item_price":self.get_item_price,
-            "get_seller_rating":self.get_seller_rating
+            "get_seller_rating":self.get_seller_rating,
+            'sell_item': self.sell_item,
+            'update_price': self.update_price,
+            'get_items_for_seller': self.get_items_for_seller,
+            'remove_item': self.remove_item
         }
 
         # Get the method based on the action
@@ -48,6 +52,7 @@ class ServerHelper:
         username = data["body"]["username"]
         password = data["body"]["password"]
         response_body = {}
+        print()
         try:
             seller_id = self.dao.get_seller_id(username, password)
 
@@ -139,4 +144,57 @@ class ServerHelper:
             print(e)
             response_body = {"rating": None, "error": str(e)}
         return response_body
+
+    def sell_item(self, data):
+        seller_id = data["body"]["seller_id"]
+        name = data['body']['name']
+        category = data['body']['category']
+        keywords = data['body']['keywords']
+        condition = data['body']['condition']
+        price = data['body']['price']
+        quantity = data['body']['quantity']
+        try:
+            self.dao.sell_item(seller_id, name, category, keywords, condition, price, quantity)
+            response_body = {"response": "Successfully added item to sell"}
+        except Exception as e:
+            print(e)
+            response_body = {"error": str(e)}
+        return response_body
+
+
+    def get_items_for_seller(self, data):
+        seller_id = data["body"]["seller_id"]
+        try:
+            items = self.dao.get_items_for_seller(seller_id)
+            print("ITEMS")
+            response_body = {"items": items}
+        except Exception as e:
+            print(e)
+            response_body = {"error": str(e)}
+        return response_body
+
+    def remove_item(self, data):
+        item_id = data["body"]["item_id"]
+        quantity = data["body"]["quantity"]
+        try:
+            message = self.dao.remove_item(item_id, quantity)
+            response_body = {"message": "Removed items succesffully"}
+        except Exception as e:
+            print(e)
+            response_body = {"error": str(e)}
+        return response_body
+
+        pass
+
+    def update_price(self, data):
+        item_id = data["body"]["item_id"]
+        price = data["body"]["price"]
+        try:
+            message = self.dao.update_price(item_id, price)
+            response_body = {"message": "Updated price succesffully"}
+        except Exception as e:
+            print(e)
+            response_body = {"error": str(e)}
+        return response_body
+        pass
 
