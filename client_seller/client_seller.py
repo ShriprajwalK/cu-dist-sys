@@ -1,5 +1,22 @@
 import socket
 import json
+import threading
+import time
+
+SESSION_WARN = 24
+SESSION_TIMEOUT = 30
+
+
+def warn_or_logout(user):
+    print('warning in 4 mins')
+    while True:
+        if user.active_time:
+            if time.time() - user.active_time >= SESSION_TIMEOUT:
+                print("Please act within 60 seconds for the session to continue")
+            elif time.time() - user.active_time >= SESSION_WARN:
+                print("SESSION has expired, logging off")
+                user.reset_state()
+        time.sleep(30)
 
 
 class SellerClient:
@@ -9,21 +26,26 @@ class SellerClient:
         self.username = None
         self.password = None
         self.id = None
+        self.session_id = None
+        self.active_time = None
 
     def reset_state(self):
         self.username = None
         self.password = None
         self.id = None
+        self.session_id = None
+        self.active_time = None
 
     def check_state(self):
         if self.id is None:
             return False
         return True
 
-    def set_state(self, username, password, seller_id):
+    def set_state(self, username, password, seller_id, session_id):
         self.username = username
         self.password = password
         self.id = seller_id
+        self.session_id = session_id
 
     def send_request(self, request):
         if not request['body']:
@@ -31,11 +53,14 @@ class SellerClient:
         if self.username and self.password:
             request['body']['username'] = self.username
             request['body']['password'] = self.password
+        if self.session_id:
+            request['body']['session_id'] = self.session_id
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.host, self.port))
             s.sendall(json.dumps(request).encode('utf-8'))
             response = s.recv(1024).decode('utf-8')
+            self.active_time = time.time()
             return json.loads(response)
 
     def create_account(self):
@@ -49,7 +74,7 @@ class SellerClient:
         password = input("New Password: ")
         request = {"action": "login", "type": "seller", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
-        self.set_state(username, password, response["body"]["seller_id"])
+        self.set_state(username, password, response["body"]["seller_id"], response['body']['session_id'])
         return response
 
     def logout(self):
@@ -103,6 +128,8 @@ class SellerClient:
 if __name__ == "__main__":
 
     seller = SellerClient('127.0.0.1', 1345)
+    warner_thread = threading.Thread(target=warn_or_logout, daemon=True, args=(seller,))
+    warner_thread.start()
     while True:
         if not seller.check_state():
             print("1. Create Account \n2. Login \n")
@@ -118,7 +145,9 @@ if __name__ == "__main__":
         else:
             print("1. Create Account \n2. Logout \n3. Get Rating \n4. Sell \n5. Change Price \
                   \n6. Remove item \n7. Display \n")
+
             action_number = int(input("Action Number: "))
+
             print()
             if action_number == 1:
                 seller.create_account()
