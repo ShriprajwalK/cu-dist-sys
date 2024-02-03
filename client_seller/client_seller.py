@@ -1,6 +1,7 @@
 import socket
 import json
 
+
 class SellerClient:
     def __init__(self, host, port):
         self.host = host
@@ -19,7 +20,6 @@ class SellerClient:
         self.password = state['password']
         self.id = state['buyer_id']
 
-
     def send_request(self, request):
         if not request['body']:
             request['body'] = {}
@@ -30,16 +30,15 @@ class SellerClient:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.host, self.port))
             s.sendall(json.dumps(request).encode('utf-8'))
-            response = s.recv(1024).decode('utf-8')
-            return response
-
+            server_response = s.recv(1024).decode('utf-8')
+            return server_response
 
     def create_account(self, username, password):
-        request = {"action": "create_account", "type": "seller", 'body': { "username": username, "password": password }}
+        request = {"action": "create_account", "type": "seller", 'body': {"username": username, "password": password}}
         return self.send_request(request)
 
     def login(self, username, password):
-        request = {"action": "login", "type": "seller", 'body': { "username": username, "password": password }}
+        request = {"action": "login", "type": "seller", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
         self.set_state(response)
         return response
@@ -52,10 +51,11 @@ class SellerClient:
     def get_rating(self):
         request = {'action': 'rating', 'type': 'seller', 'body': {}}
         return self.send_request(request)
-    
+
     def sell(self, name, category, keywords, condition, price, quantity):
-        request = {'action': 'sell', 'type': 'seller', 'body': {'name': name, 'category': category, 'keywords': keywords,
-                                                                'condition': condition, 'price': price, 'quantity': quantity}}
+        request = {'action': 'sell', 'type': 'seller',
+                   'body': {'name': name, 'category': category, 'keywords': keywords,
+                            'condition': condition, 'price': price, 'quantity': quantity}}
 
         return self.send_request(request)
 
@@ -70,7 +70,6 @@ class SellerClient:
     def remove_item(self, item, quantity):
         request = {'action': 'display', 'type': 'seller', 'body': {'item': item, 'quantity': quantity}}
         return self.send_request(request)
-
 
 
 if __name__ == "__main__":
