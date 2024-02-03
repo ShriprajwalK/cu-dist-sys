@@ -1,6 +1,23 @@
 import socket
 import json
 from prettytable import PrettyTable
+import threading
+import time
+
+SESSION_WARN = 24
+SESSION_TIMEOUT = 30
+
+
+def warn_or_logout(user):
+    print('warning in 4 mins')
+    while True:
+        if user.active_time:
+            if time.time() - user.active_time >= SESSION_TIMEOUT:
+                print("Please act within 60 seconds for the session to continue")
+            elif time.time() - user.active_time >= SESSION_WARN:
+                print("SESSION has expired, logging off")
+                user.reset_state()
+        time.sleep(30)
 
 
 class BuyerClient:
@@ -11,21 +28,27 @@ class BuyerClient:
         self.password = None
         self.id = None
         self.cart = []
+        self.session_id = None
+        self.active_time = None
 
     def reset_state(self):
         self.username = None
         self.password = None
         self.id = None
+        self.session_id = None
+        self.active_time = None
+
 
     def check_state(self):
         if self.id is None:
             return False
         return True
 
-    def set_state(self, username, password, buyer_id):
+    def set_state(self, username, password, buyer_id, session_id):
         self.username = username
         self.password = password
         self.id = buyer_id
+        self.session_id = session_id
 
     def send_request(self, request):
         if not request['body']:
@@ -33,11 +56,14 @@ class BuyerClient:
         if self.username and self.password:
             request['body']['username'] = self.username
             request['body']['password'] = self.password
+        if self.session_id:
+            request['body']['session_id'] = self.session_id
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.host, self.port))
             s.sendall(json.dumps(request).encode('utf-8'))
             response = s.recv(1024).decode('utf-8')
+            self.active_time = time.time()
             return json.loads(response)
 
     def create_account(self):
@@ -60,7 +86,7 @@ class BuyerClient:
         if 'error' in response['body']:
             print("Login Unsuccessful : ", response["body"]["error"], "\n")
         else:
-            self.set_state(username, password, response["body"]["buyer_id"])
+            self.set_state(username, password, response["body"]["buyer_id"], response["body"]["session_id"])
             print(response['body']['message'])
 
         return response
@@ -201,6 +227,8 @@ class BuyerClient:
 
 if __name__ == "__main__":
     buyer = BuyerClient('127.0.0.1', 1234)
+    warner_thread = threading.Thread(target=warn_or_logout, daemon=True, args=(buyer,))
+    warner_thread.start()
     while True:
         if not buyer.check_state():
             print("1. Create Account \n2. Login \n")

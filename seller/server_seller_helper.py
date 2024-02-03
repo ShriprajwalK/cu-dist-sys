@@ -146,8 +146,8 @@ class SellerServerHelper:
         return response
 
     def logout(self, data):
-        session_id = data['body']['session_id']
-        del sessions[session_id]
+        if 'session_id' in data['body']:
+            del sessions[data['body']['session_id']]
 
 
 cleaner_thread = threading.Thread(target=session_cleaner, daemon=True)
