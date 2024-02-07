@@ -87,12 +87,13 @@ class ServerHelper:
         return response_body
     
     def create_cart(self, data):
+        item_name = data["body"]["item_name"]
         item_id = data["body"]["item_id"]
         buyer_id = data["body"]["buyer_id"]
         quantity = data["body"]["quantity"]
         price = data["body"]["price"]
         try:
-            self.dao.create_cart(item_id,buyer_id, quantity, price)
+            self.dao.create_cart(item_name, item_id,buyer_id, quantity, price)
             response_body = {"is_created": True}
         except Exception as e:
             print(e)

@@ -105,7 +105,7 @@ class Dao:
             with self.connection.cursor() as cursor:
                 insert_query = sql.SQL("SELECT seller_id FROM item where id = {};").format(sql.Literal(item_id))
                 cursor.execute(insert_query)
-                item = cursor.fetchall()[0]
+                item = cursor.fetchall()[0][0]
                 print(item)
             self.connection.commit()
             return item

@@ -15,6 +15,6 @@ CREATE TABLE IF NOT EXISTS item (
     price REAL,
     rating INTEGER DEFAULT 0,
     description TEXT,
-    category INTEGER NOT NULL,
+    category TEXT NOT NULL,
     FOREIGN KEY(seller_id) REFERENCES seller(id)
 );

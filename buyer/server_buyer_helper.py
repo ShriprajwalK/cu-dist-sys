@@ -11,7 +11,7 @@ def manage_session(data):
     if 'session_id' in data['body']:
         if data['body']['session_id'] in sessions:
             session_id = data['body']['session_id']
-            sessions[data['body']['session_id']['updated_at']] = time.time()
+            sessions[data['body']['session_id']]["updated_at"] = time.time()
             print('SESSION exists::', session_id)
             return {'exists': True, 'session_id': session_id}
         else:
@@ -52,8 +52,6 @@ class BuyerServerHelper:
     def __init__(self):
         self.customer_db = CustomerDatabaseConnection("localhost",9000)
         self.product_db = ProductDatabaseConnection("localhost",9001)
-
-        # self.product_db = product_db
 
     def choose_and_execute_action(self, action, data):
         response = {"action": action, "type": "buyer"}
@@ -128,15 +126,17 @@ class BuyerServerHelper:
 
     def search(self, data):
         item_keywords = data["body"]["keywords"]
-        item_category = data["body"]["item_category"]
-        comparing_text = item_keywords.join(item_category)
+        requested_category = data["body"]["item_category"]
+        
         response_body = {"items": [], "message": "Search successful. Results:"}
         similarity_scores = []
         try:
             item_list = self.product_db.get_all_items()
             for item in item_list:
-                score = jaccard_similarity(comparing_text, item[5])
-                similarity_scores.append((score, item))
+                item_category = item[7]
+                if(item_category==requested_category):
+                    score = jaccard_similarity(item_keywords, item[5])
+                    similarity_scores.append((score, item))
 
             similarity_scores.sort(key=lambda k: k[0], reverse=True)
             items_list = [i[1] for i in similarity_scores]
@@ -145,7 +145,7 @@ class BuyerServerHelper:
 
             current_item_number = 1
             for ranked_item in items_list:
-                item = {"item_id": ranked_item[0], "quantity": ranked_item[2], "price": ranked_item[3],
+                item = {"item_name":ranked_item[6],"item_id": ranked_item[0], "quantity": ranked_item[2], "price": ranked_item[3],
                         "rating": ranked_item[4]}
                 response_body["items"].append(item)
                 current_item_number += 1
@@ -178,25 +178,31 @@ class BuyerServerHelper:
         requested_quantity = data["body"]["quantity"]
         response_body = {}
 
-        try:
-            
+        try:            
             item = self.product_db.get_item_by_id(item_id)
             available_quantity = item[2]
+            item_name = item[6]
             print("available_quantity:",available_quantity)
             if requested_quantity >= available_quantity:
-                return {"add": False, "message": "Requested Quantity Not Present in the Database"}
-            
-            price = self.product_db.get_item_price(item_id)
-            is_added = self.customer_db.add_to_cart(item_id,buyer_id, requested_quantity, price)
-
-            if(is_added):
-                response_body = {"add": True,  "message": "Item added to cart"}
+                response_body = {"add": False, "message": "Requested Quantity Not Present in the Database"}
             else:
-                response_body = {"add": False,  "message": "Item not added to cart"}
+                cart_item = self.customer_db.get_cart_item(item_id,buyer_id)
+                print("cart_item",cart_item)
+                price = self.product_db.get_item_price(item_id)
+                if(cart_item==None or len(cart_item)==0):
+                    is_added = self.customer_db.add_to_cart(item_name, item_id,buyer_id, requested_quantity, price)
+                else:
+                    original_quantity = cart_item[3]
+                    is_added = self.customer_db.update_cart_item_quantity(item_id, buyer_id, original_quantity+requested_quantity)
+
+                if(is_added):
+                    response_body = {"add": True,  "message": "Item added to cart"}
+                else:
+                    response_body = {"add": False,  "message": "Item not added to cart"}
             return response_body
         except Exception as e:
-            print(e)
-            return {"add": False, "message": "Item Not Present in the Database"}
+                print(e)
+                return {"add": False, "message": "Item Not Present in the Database"}
         
     def get_purchase_history(self,data):
         buyer_id = data["body"]["buyer_id"]
@@ -207,6 +213,7 @@ class BuyerServerHelper:
 
             for purchased_item in purchased_items:
                 item_info={}
+                item_info["item_name"] = purchased_item[4]
                 item_info["item_id"] = purchased_item[2]
                 item_info["quantity"] = purchased_item[3]
                 response_body["items"].append(item_info)
@@ -218,16 +225,20 @@ class BuyerServerHelper:
     
     def item_rating(self,data):
         item_rating_map = data["body"]["rating"]
+        int_item_rating_map = {}
+        for item_id in item_rating_map:
+            int_item_rating_map[int(item_id)] = item_rating_map[item_id]
         try:
             items = self.product_db.get_all_items()
             for item in items:
                 item_id = item[0]
-                item_rating = item[1] 
-                if(item_id in item_rating_map.keys()):
-                    item_rating += item_rating_map[item_id]
+                item_rating = item[4] 
+                if(item_id in int_item_rating_map.keys()):
+                    item_rating += int_item_rating_map[item_id]
                     self.product_db.update_item_rating(item_id,item_rating)
                     seller_id = self.product_db.get_item_seller_id(item_id)
-                    self.product_db.update_seller_rating(seller_id,item_rating)
+                    print("seller_id",seller_id)
+                    self.product_db.update_seller_rating(seller_id,int_item_rating_map[item_id])
             return {"success":True}
         except Exception as e:
             print(e)
@@ -278,6 +289,7 @@ class BuyerServerHelper:
             cart_items = self.customer_db.get_buyer_cart_items(buyer_id)
             for item in cart_items:
                 item_map = {}
+                item_map["item_name"] = item[5]
                 item_map["item_id"] = item[2]
                 item_map["quantity"] = item[3]
                 item_map["price"] = item[4]

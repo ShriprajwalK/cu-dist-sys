@@ -95,6 +95,7 @@ class ServerHelper:
         return response_body
     
     def update_item_rating(self, data):
+        print("data",data)
         item_id = data["body"]["item_id"]
         item_rating = data["body"]["item_rating"]
 

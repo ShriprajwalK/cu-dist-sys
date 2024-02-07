@@ -32,8 +32,8 @@ class CustomerDatabaseConnection:
         items = response["body"]["items"]
         return items
     
-    def add_to_cart(self,item_id,buyer_id, quantity,price):
-        request = {"action":"create_cart",'body': {"buyer_id": buyer_id, "item_id": item_id, 'quantity': quantity,"price":price}}
+    def add_to_cart(self,item_name, item_id,buyer_id, quantity,price):
+        request = {"action":"create_cart",'body': {"item_name":item_name, "buyer_id": buyer_id, "item_id": item_id, 'quantity': quantity,"price":price}}
         response = self.send_request(request)
         success = response["body"]["is_created"]
         return success

@@ -18,7 +18,7 @@ def manage_session(data):
     if 'session_id' in data['body']:
         if data['body']['session_id'] in sessions:
             session_id = data['body']['session_id']
-            sessions[data['body']['session_id']['updated_at']] = time.time()
+            sessions[data['body']['session_id']]["updated_at"] = time.time()
             print('SESSION exists::', session_id)
             return {'exists': True, 'session_id': session_id}
         else:

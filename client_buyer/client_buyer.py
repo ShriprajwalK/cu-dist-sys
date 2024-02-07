@@ -4,8 +4,8 @@ from prettytable import PrettyTable
 import threading
 import time
 
-SESSION_WARN = 24
-SESSION_TIMEOUT = 30
+SESSION_WARN = 240
+SESSION_TIMEOUT = 300
 
 
 def warn_or_logout(user):
@@ -13,10 +13,10 @@ def warn_or_logout(user):
     while True:
         if user.active_time:
             if time.time() - user.active_time >= SESSION_TIMEOUT:
-                print("Please act within 60 seconds for the session to continue")
-            elif time.time() - user.active_time >= SESSION_WARN:
                 print("SESSION has expired, logging off")
                 user.reset_state()
+            elif time.time() - user.active_time >= SESSION_WARN:
+                print("Please act within 1 min seconds for the session to continue")
         time.sleep(30)
 
 
@@ -105,11 +105,12 @@ class BuyerClient:
         response_body = response["body"]
         table = PrettyTable(["Id", "Quantity", "Price", "Rating"])
         for item in response_body["items"]:
+            item_name = item["item_name"]
             item_id = item["item_id"]
             quantity = item["quantity"]
             price = item["price"]
             rating = item["rating"]
-            table.add_row([item_id, quantity, price, rating])
+            table.add_row([item_name, item_id, quantity, price, rating])
 
         print(table, "\n")
 
@@ -145,9 +146,9 @@ class BuyerClient:
         if(len(items)==0 or items== None):
             print("No items in the cart")
         else:
-            table = PrettyTable(["Id", "Quantity", "Price"])
+            table = PrettyTable(["Name", "Id", "Quantity", "Price"])
             for item in items:
-                table.add_row([item["item_id"], item["quantity"], item["price"]])
+                table.add_row([item["item_name"], item["item_id"], item["quantity"], item["price"]])
             print(table, "\n")
 
     def cart_clear(self):
@@ -180,7 +181,8 @@ class BuyerClient:
             item_rating = {}
             for item in items:
                 item_id = item["item_id"]
-                rating = int(input("Provide Feedback (0 or 1) for item Id: ",item_id))
+                input_string  = "Provide Feedback (0 or 1) for item Id " + str(item_id) + ":"
+                rating = int(input(input_string))
                 item_rating[item_id] = rating
 
         request = {"action": "item_rating", "type": "buyer", 'body': {"rating":item_rating}}
@@ -211,11 +213,12 @@ class BuyerClient:
             print("No items purchased")
             return
         else:
-            table = PrettyTable(["Id", "Quantity"])
+            table = PrettyTable(["Name", "Id", "Quantity"])
             for item in response_body["items"]:
+                item_name = item["item_name"]
                 item_id = item["item_id"]
                 quantity = item["quantity"]
-                table.add_row([item_id, quantity])
+                table.add_row([item_name, item_id, quantity])
             print(table, "\n")
 
     def make_purchase(self):

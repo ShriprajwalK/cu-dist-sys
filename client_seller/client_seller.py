@@ -2,9 +2,10 @@ import socket
 import json
 import threading
 import time
+from prettytable import PrettyTable
 
-SESSION_WARN = 24
-SESSION_TIMEOUT = 30
+SESSION_WARN = 240
+SESSION_TIMEOUT = 300
 
 
 def warn_or_logout(user):
@@ -12,10 +13,10 @@ def warn_or_logout(user):
     while True:
         if user.active_time:
             if time.time() - user.active_time >= SESSION_TIMEOUT:
-                print("Please act within 60 seconds for the session to continue")
-            elif time.time() - user.active_time >= SESSION_WARN:
                 print("SESSION has expired, logging off")
                 user.reset_state()
+            elif time.time() - user.active_time >= SESSION_WARN:
+                print("Please act within 1 min seconds for the session to continue")
         time.sleep(30)
 
 
@@ -116,7 +117,15 @@ class SellerClient:
                                                                                 }
                    }
         response = self.send_request(request)
-        print(response['body']['body']['items'])
+        table = PrettyTable(["Name", "Id", "Quantity","Price"])
+        for item in response['body']['body']['items']:
+            item_name = item[6]
+            item_id = item[0]
+            quantity = item[2]
+            price = item[3]
+            if quantity!=0:
+                table.add_row([item_name, item_id, quantity,price])
+        print(table, "\n")
 
     def remove_item(self):
         item = input("Item id: ")

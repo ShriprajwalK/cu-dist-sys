@@ -69,11 +69,11 @@ class Dao:
             self.connection.commit()
             raise e
         
-    def create_cart(self, item_id,buyer_id, quantity,price):
+    def create_cart(self,item_name, item_id,buyer_id, quantity,price):
         try:
             with self.connection.cursor() as cursor:
-                insert_query = sql.SQL("INSERT INTO shopping_cart (buyer_id, item_id,quantity, price) VALUES ({}, {},{},{});").format(
-                    sql.Literal(buyer_id), sql.Literal(item_id), sql.Literal(quantity), sql.Literal(price)
+                insert_query = sql.SQL("INSERT INTO shopping_cart (buyer_id, item_id,quantity, price,item_name) VALUES ({}, {},{},{}, {});").format(
+                    sql.Literal(buyer_id), sql.Literal(item_id), sql.Literal(quantity), sql.Literal(price), sql.Literal(item_name)
                 )
                 cursor.execute(insert_query)
             self.connection.commit()

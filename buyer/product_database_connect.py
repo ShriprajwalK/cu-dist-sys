@@ -27,6 +27,7 @@ class ProductDatabaseConnection:
     
     def update_item_rating(self, item_id,item_rating):
         request = {"action":"update_item_rating",'body': {"item_id":item_id,"item_rating":item_rating}}
+        print("request,",request["body"]["item_id"])
         response = self.send_request(request)
         success = response["body"]["success"]
         return success
@@ -38,7 +39,7 @@ class ProductDatabaseConnection:
         return seller_id
     
     def update_seller_rating(self, seller_id,item_rating):
-        request = {"action":"update_item_rating",'body': {"seller_id":seller_id,"item_rating":item_rating}}
+        request = {"action":"update_seller_rating",'body': {"seller_id":seller_id,"item_rating":item_rating}}
         response = self.send_request(request)
         success = response["body"]["success"]
         return success
