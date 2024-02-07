@@ -2,12 +2,16 @@ import socket
 import json
 from buyer.server_buyer_helper import *
 import sys
+import time
 
 
 class BuyerServer:
     def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
+        self.operations = 0
+        self.start = time.time()
+        self.max = 0
 
         self.server_buyer_helper = BuyerServerHelper()
         self.create_server_socket()
@@ -28,12 +32,15 @@ class BuyerServer:
             server_socket.close()
             sys.exit(0)
     def handle_client_request(self, client_socket):
+        self.operations += 1
         data = client_socket.recv(1024).decode('utf-8')
         parsed_data = json.loads(data)
         print(f"Received data from client: {data}")
         action = parsed_data['action'] 
         response = self.server_buyer_helper.choose_and_execute_action(action, parsed_data)
         print("response", response)
+        self.max = max(self.max, self.operations / (time.time() - self.start))
+        print(self.max)
         client_socket.send(json.dumps(response).encode('utf-8'))
         client_socket.close()
 

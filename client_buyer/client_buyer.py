@@ -30,6 +30,7 @@ class BuyerClient:
         self.cart = []
         self.session_id = None
         self.active_time = None
+        self.times = {}
 
     def reset_state(self):
         self.username = None
@@ -78,11 +79,17 @@ class BuyerClient:
             print(response['body']['message'])
 
     def login(self):
-        username = input("Username: ")
-        password = input("Password: ")
+        start = time.time()
+        username = 'asdf' #input("Username: ")
+        password = 'asdf' #input("Password: ")
         request = {"action": "login", "type": "buyer", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
+        end = time.time()
 
+        if 'login' not in self.times:
+            self.times['login'] = [end - start]
+        else:
+            self.times['login'].append(end - start)
         if 'error' in response['body']:
             print("Login Unsuccessful : ", response["body"]["error"], "\n")
         else:
@@ -138,8 +145,14 @@ class BuyerClient:
             print("Item Not Found in the Cart")
 
     def cart_display(self):
-        request = {"action": "cart_display", "type": "buyer", 'body': {"buyer_id": self.id}}
+        start = time.time()
+        request = {"action": "cart_display", "type": "buyer", 'body': {"buyer_id": 1}}
         response = self.send_request(request)
+        end = time.time()
+        if 'display' not in self.times:
+            self.times['display'] = [end - start]
+        else:
+            self.times['display'].append(end - start)
         response_body = response["body"]
         items = response_body["items"] 
         if(len(items)==0 or items== None):
@@ -227,47 +240,52 @@ class BuyerClient:
 
 if __name__ == "__main__":
     buyer = BuyerClient('127.0.0.1', 1234)
-    warner_thread = threading.Thread(target=warn_or_logout, daemon=True, args=(buyer,))
-    warner_thread.start()
-    while True:
-        if not buyer.check_state():
-            print("1. Create Account \n2. Login \n")
-            action_number = int(input("Action Number: "))
-            print()
-            if action_number == 1:
-                buyer.create_account()
-            elif action_number == 2:
-                buyer.login()
-            else:
-                print("Give Appropriate Action Number")
-                continue
-        else:
-            print("1. Create Account \n2. Logout \n3. Search Items \n4. Add Items to Cart \n5. Remove Item From Cart \
-                  \n6. Display Cart \n7. Clear the Cart \n8. Save the Cart \n9. Provide Item Feedback \n10. Display Seller Rating \
-                  \n11. Display Buyer Purchase History \n12. Purchase the Items\n")
-            action_number = int(input("Action Number: "))
-            print()
-            if action_number == 1:
-                buyer.create_account()
-            elif action_number == 2:
-                buyer.logout()
-            elif action_number == 3:
-                buyer.search()
-            elif action_number == 4:
-                buyer.cart_add()
-            elif action_number == 5:
-                buyer.cart_remove()
-            elif action_number == 6:
-                buyer.cart_display()
-            elif action_number == 7:
-                buyer.cart_clear()
-            elif action_number == 8:
-                buyer.cart_save()
-            elif action_number == 9:
-                buyer.provide_feedback()
-            elif action_number == 10:
-                buyer.seller_rating()
-            elif action_number == 11:
-                buyer.history()
-            elif action_number == 12:
-                buyer.make_purchase()
+    for i in range(1000):
+        buyer.login()
+        buyer.cart_display()
+    print("login:", sum(buyer.times['login']) / len(buyer.times['login']))
+    print("display:", sum(buyer.times['display']) / len(buyer.times['display']))
+    # warner_thread = threading.Thread(target=warn_or_logout, daemon=True, args=(buyer,))
+    # warner_thread.start()
+    # while True:
+    #     if not buyer.check_state():
+    #         print("1. Create Account \n2. Login \n")
+    #         action_number = int(input("Action Number: "))
+    #         print()
+    #         if action_number == 1:
+    #             buyer.create_account()
+    #         elif action_number == 2:
+    #             buyer.login()
+    #         else:
+    #             print("Give Appropriate Action Number")
+    #             continue
+    #     else:
+    #         print("1. Create Account \n2. Logout \n3. Search Items \n4. Add Items to Cart \n5. Remove Item From Cart \
+    #               \n6. Display Cart \n7. Clear the Cart \n8. Save the Cart \n9. Provide Item Feedback \n10. Display Seller Rating \
+    #               \n11. Display Buyer Purchase History \n12. Purchase the Items\n")
+    #         action_number = int(input("Action Number: "))
+    #         print()
+    #         if action_number == 1:
+    #             buyer.create_account()
+    #         elif action_number == 2:
+    #             buyer.logout()
+    #         elif action_number == 3:
+    #             buyer.search()
+    #         elif action_number == 4:
+    #             buyer.cart_add()
+    #         elif action_number == 5:
+    #             buyer.cart_remove()
+    #         elif action_number == 6:
+    #             buyer.cart_display()
+    #         elif action_number == 7:
+    #             buyer.cart_clear()
+    #         elif action_number == 8:
+    #             buyer.cart_save()
+    #         elif action_number == 9:
+    #             buyer.provide_feedback()
+    #         elif action_number == 10:
+    #             buyer.seller_rating()
+    #         elif action_number == 11:
+    #             buyer.history()
+    #         elif action_number == 12:
+    #             buyer.make_purchase()

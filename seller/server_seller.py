@@ -3,12 +3,15 @@ import psycopg2
 import json
 from seller.server_seller_helper import *
 import sys
-
+import time
 
 class SellerServer:
     def __init__(self, server_host, server_port):
         self.server_host = server_host
         self.server_port = server_port
+        self.operations = 0
+        self.start = time.time()
+        self.max = 0
 
         self.server_seller_helper = SellerServerHelper()
         self.create_server_socket()
@@ -30,16 +33,19 @@ class SellerServer:
             sys.exit(0)
 
     def handle_client_request(self, client_socket):
+        self.operations += 1
         data = client_socket.recv(1024).decode('utf-8')
         parsed_data = json.loads(data)
         print(f"Received data from client: {data}")
         action = parsed_data['action']
+        self.max = max(self.max, self.operations / (time.time() - self.start))
 
         # return self.choose_and_execute_action(action,client_socket,parsed_data)
         response = self.server_seller_helper.choose_and_execute_action(action, parsed_data)
         print("response", response)
         client_socket.send(json.dumps(response).encode('utf-8'))
         client_socket.close()
+        print(self.max)
 
 
 if __name__ == "__main__":
