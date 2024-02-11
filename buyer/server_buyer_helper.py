@@ -1,45 +1,8 @@
 from buyer.customer_database_connect import *
 from buyer.product_database_connect import *
-import time
-import uuid
 import threading
 
-sessions = {}
-SESSION_TIMEOUT = 30  # 5 minutes
 
-def manage_session(data):
-    if 'session_id' in data['body']:
-        if data['body']['session_id'] in sessions:
-            session_id = data['body']['session_id']
-            sessions[data['body']['session_id']]["updated_at"] = time.time()
-            print('SESSION exists::', session_id)
-            return {'exists': True, 'session_id': session_id}
-        else:
-            session_id = str(uuid.uuid4())
-            time_now = time.time()
-            sessions[session_id] = {'created_at': time_now, 'updated_at': time_now}
-            print('Invalid session. New session_id: ', session_id)
-            return {'exists': False, 'session_id': session_id}
-    else:
-        print('No session')
-        session_id = str(uuid.uuid4())
-        time_now = time.time()
-        sessions[session_id] = {'created_at': time_now, 'updated_at': time_now}
-        print('No session. New sessionid:', session_id)
-        return {'exists': False, 'session_id': session_id}
-
-
-def session_cleaner():
-    while True:
-        current_time = time.time()
-        expired_sessions = [sid for sid, session in sessions.items() if
-                            current_time - session['created_at'] > SESSION_TIMEOUT]
-
-        for sid in expired_sessions:
-            del sessions[sid]
-
-        print(f"Cleaned up {len(expired_sessions)} expired sessions.")
-        time.sleep(60)  # Check every minute
 
 def jaccard_similarity(x, y):
     intersection_cardinality = len(set.intersection(*[set(x), set(y)]))
@@ -52,43 +15,6 @@ class BuyerServerHelper:
     def __init__(self):
         self.customer_db = CustomerDatabaseConnection("localhost",9000)
         self.product_db = ProductDatabaseConnection("localhost",9001)
-
-    def choose_and_execute_action(self, action, data):
-        response = {"action": action, "type": "buyer"}
-
-        response_body = {}
-
-        action_methods = {
-            "create_account": self.create_account,
-            "login": self.login,
-            "search": self.search,
-            "get_all_items": self.get_all_items,
-            "item_rating": self.item_rating,
-            "get_purchase_history":self.get_purchase_history,
-            "cart_clear":self.cart_clear,
-            "cart_remove":self.cart_remove,
-            "cart_display":self.cart_display,
-            "cart_add":self.cart_add,
-            "seller_rating":self.seller_rating,
-            "cart_save":self.cart_save,
-            'logout': self.logout,
-        }
-
-        # Get the method based on the action
-        method = action_methods[action]
-
-        session = manage_session(data)
-        if not session['exists']:
-            data['body']['session_id'] = session['session_id']
-
-        if method:
-            response_body = method(data)
-        else:
-            response_body = {"error": f"Unknown action: {action}"}
-
-        response["body"] = response_body
-
-        return response
 
     def login(self, data):
         username = data["body"]["username"]
@@ -294,6 +220,7 @@ class BuyerServerHelper:
                 item_map["quantity"] = item[3]
                 item_map["price"] = item[4]
                 response_body["items"].append(item_map)
+            print(response_body)
             return response_body
                 
         except Exception as e:
@@ -324,12 +251,14 @@ class BuyerServerHelper:
             print(e)
             return response_body
 
-    def logout(self, data):
+    def logout(self, data,sessions):
         if 'session_id' in data['body']:
             del sessions[data['body']['session_id']]
 
-cleaner_thread = threading.Thread(target=session_cleaner, daemon=True)
-cleaner_thread.start()
+    def purchase(self, data):
+        return {"purchase":True}
+
+
 
 
 

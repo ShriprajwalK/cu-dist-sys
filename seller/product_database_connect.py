@@ -43,19 +43,23 @@ class ProductDatabaseConnection:
                                                    "keywords": keywords, "condition": condition, "price": price,
                                                    "quantity": quantity}}
         response = self.send_request(request)
-        return response
+        added_item = response["body"]["added_item"]
+        return added_item
 
     def update_price(self, item_id, price):
         request = {"action": "update_price", "body": {'item_id': item_id, 'price': price}}
         response = self.send_request(request)
-        return response
+        updated = response["body"]["updated"]
+        return updated
 
     def remove_item(self, item_id, quantity):
         request = {"action": "remove_item", "body": {'item_id': item_id, 'quantity': quantity}}
         response = self.send_request(request)
-        return response
+        removed = response["body"]["removed"]
+        return removed
 
     def get_items_for_seller(self, seller_id):
         request = {"action": "get_items_for_seller", "body": {'seller_id': seller_id}}
         response = self.send_request(request)
-        return response
+        items = response["body"]["items"]
+        return items
