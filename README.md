@@ -10,6 +10,8 @@ $ tree -I data
     │   ├── client_buyer.py
     │   ├── server_buyer.py
     │   └── server_buyer_helper.py
+    │   └── sessions_manager.py
+    |
     ├── docker-compose.yaml
     ├── init_dbs.sh
     ├── postgres
@@ -24,6 +26,7 @@ $ tree -I data
     │   ├── server_buyer.py
     │   ├── server_buyer_helper.py
     │   └── server_seller.py
+    │   └── sessions_manager.py
     ├── sql
     │   ├── init_customer.sql
     │   └── init_product.sql
