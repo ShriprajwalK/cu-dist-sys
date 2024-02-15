@@ -1,11 +1,14 @@
-from buyer.customer_database_connect import *
-from buyer.product_database_connect import *
+from customer_database_connect import *
+from product_database_connect import *
 import time
 import uuid
 import threading
 
 sessions = {}
 SESSION_TIMEOUT = 30  # 5 minutes
+from zeep import Client
+wsdl_url = 'http://127.0.0.1:8000/?wsdl'
+client = Client(wsdl_url)
 
 def manage_session(data):
     if 'session_id' in data['body']:
@@ -41,6 +44,7 @@ def session_cleaner():
         print(f"Cleaned up {len(expired_sessions)} expired sessions.")
         time.sleep(60)  # Check every minute
 
+
 def jaccard_similarity(x, y):
     intersection_cardinality = len(set.intersection(*[set(x), set(y)]))
     union_cardinality = len(set.union(*[set(x), set(y)]))
@@ -50,8 +54,8 @@ def jaccard_similarity(x, y):
 class BuyerServerHelper:
 
     def __init__(self):
-        self.customer_db = CustomerDatabaseConnection("localhost",9000)
-        self.product_db = ProductDatabaseConnection("localhost",9001)
+        self.customer_db = CustomerDatabaseConnection("localhost", 9000)
+        self.product_db = ProductDatabaseConnection("localhost", 9001)
 
     def choose_and_execute_action(self, action, data):
         response = {"action": action, "type": "buyer"}
@@ -64,14 +68,15 @@ class BuyerServerHelper:
             "search": self.search,
             "get_all_items": self.get_all_items,
             "item_rating": self.item_rating,
-            "get_purchase_history":self.get_purchase_history,
-            "cart_clear":self.cart_clear,
-            "cart_remove":self.cart_remove,
-            "cart_display":self.cart_display,
-            "cart_add":self.cart_add,
-            "seller_rating":self.seller_rating,
-            "cart_save":self.cart_save,
+            "get_purchase_history": self.get_purchase_history,
+            "cart_clear": self.cart_clear,
+            "cart_remove": self.cart_remove,
+            "cart_display": self.cart_display,
+            "cart_add": self.cart_add,
+            "seller_rating": self.seller_rating,
+            "cart_save": self.cart_save,
             'logout': self.logout,
+            'purchase': self.purchase,
         }
 
         # Get the method based on the action
@@ -114,11 +119,11 @@ class BuyerServerHelper:
 
         try:
             is_created = self.customer_db.create_buyer(username, password)
-            if is_created==False:
+            if is_created == False:
                 response_body = {"is_created": False, "message": 'Account not created'}
             else:
                 response_body = {"is_created": True, "message": 'Account created Successfully'}
-            
+
         except Exception as e:
             print(e)
             response_body = {"is_created": False, "error": str(e)}
@@ -127,14 +132,14 @@ class BuyerServerHelper:
     def search(self, data):
         item_keywords = data["body"]["keywords"]
         requested_category = data["body"]["item_category"]
-        
+
         response_body = {"items": [], "message": "Search successful. Results:"}
         similarity_scores = []
         try:
             item_list = self.product_db.get_all_items()
             for item in item_list:
                 item_category = item[7]
-                if(item_category==requested_category):
+                if (item_category == requested_category):
                     score = jaccard_similarity(item_keywords, item[5])
                     similarity_scores.append((score, item))
 
@@ -145,7 +150,8 @@ class BuyerServerHelper:
 
             current_item_number = 1
             for ranked_item in items_list:
-                item = {"item_name":ranked_item[6],"item_id": ranked_item[0], "quantity": ranked_item[2], "price": ranked_item[3],
+                item = {"item_name": ranked_item[6], "item_id": ranked_item[0], "quantity": ranked_item[2],
+                        "price": ranked_item[3],
                         "rating": ranked_item[4]}
                 response_body["items"].append(item)
                 current_item_number += 1
@@ -155,16 +161,16 @@ class BuyerServerHelper:
             return response_body
         except Exception as e:
             print(e)
-            response_body = {"items": [], "message": "Search unsuccessful because:"+str(e)}
+            response_body = {"items": [], "message": "Search unsuccessful because:" + str(e)}
             return response_body
-        
-    def get_all_items(self,data):
+
+    def get_all_items(self, data):
         response_body = {"items": []}
         try:
             item_list = self.product_db.get_all_items()
             for item in item_list:
                 item_map = {"item_id": item[0], "quantity": item[2], "price": item[3],
-                        "rating": item[4]}
+                            "rating": item[4]}
                 response_body["items"].append(item_map)
             return response_body
         except Exception as e:
@@ -178,41 +184,47 @@ class BuyerServerHelper:
         requested_quantity = data["body"]["quantity"]
         response_body = {}
 
-        try:            
+        try:
             item = self.product_db.get_item_by_id(item_id)
-            available_quantity = item[2]
-            item_name = item[6]
-            print("available_quantity:",available_quantity)
+            available_quantity = item['quantity']
+            item_name = item['name']
+            print("available_quantity:", available_quantity)
             if requested_quantity >= available_quantity:
                 response_body = {"add": False, "message": "Requested Quantity Not Present in the Database"}
             else:
-                cart_item = self.customer_db.get_cart_item(item_id,buyer_id)
-                print("cart_item",cart_item)
+                print("===Get cart item")
+                cart_item = self.customer_db.get_cart_item(item_id, buyer_id)
+                print("cart_item", cart_item, type(cart_item))
+                print("===Get item price")
                 price = self.product_db.get_item_price(item_id)
-                if(cart_item==None or len(cart_item)==0):
-                    is_added = self.customer_db.add_to_cart(item_name, item_id,buyer_id, requested_quantity, price)
+                is_added = False
+                if cart_item == None:
+                    print("===add to cart")
+                    is_added = self.customer_db.add_to_cart(item_name, item_id, buyer_id, requested_quantity, price)
                 else:
-                    original_quantity = cart_item[3]
-                    is_added = self.customer_db.update_cart_item_quantity(item_id, buyer_id, original_quantity+requested_quantity)
+                    print("===update cart item quantity")
+                    original_quantity = cart_item['quantity']
+                    is_added = self.customer_db.update_cart_item_quantity(item_id, buyer_id,
+                                                                          original_quantity + requested_quantity)
 
-                if(is_added):
-                    response_body = {"add": True,  "message": "Item added to cart"}
+                if is_added:
+                    response_body = {"add": True, "message": "Item added to cart"}
                 else:
-                    response_body = {"add": False,  "message": "Item not added to cart"}
+                    response_body = {"add": False, "message": "Item not added to cart"}
             return response_body
         except Exception as e:
-                print(e)
-                return {"add": False, "message": "Item Not Present in the Database"}
-        
-    def get_purchase_history(self,data):
+            print(e)
+            return {"add": False, "message": "Item Not Present in the Database"}
+
+    def get_purchase_history(self, data):
         buyer_id = data["body"]["buyer_id"]
         response_body = {"items": []}
         try:
-            print("buyer_id",buyer_id)
+            print("buyer_id", buyer_id)
             purchased_items = self.customer_db.get_purchase_history(buyer_id)
 
             for purchased_item in purchased_items:
-                item_info={}
+                item_info = {}
                 item_info["item_name"] = purchased_item[4]
                 item_info["item_id"] = purchased_item[2]
                 item_info["quantity"] = purchased_item[3]
@@ -222,8 +234,8 @@ class BuyerServerHelper:
             print(e)
             response_body = {"items": None}
             return response_body
-    
-    def item_rating(self,data):
+
+    def item_rating(self, data):
         item_rating_map = data["body"]["rating"]
         int_item_rating_map = {}
         for item_id in item_rating_map:
@@ -232,33 +244,31 @@ class BuyerServerHelper:
             items = self.product_db.get_all_items()
             for item in items:
                 item_id = item[0]
-                item_rating = item[4] 
-                if(item_id in int_item_rating_map.keys()):
+                item_rating = item[4]
+                if (item_id in int_item_rating_map.keys()):
                     item_rating += int_item_rating_map[item_id]
-                    self.product_db.update_item_rating(item_id,item_rating)
+                    self.product_db.update_item_rating(item_id, item_rating)
                     seller_id = self.product_db.get_item_seller_id(item_id)
-                    print("seller_id",seller_id)
-                    self.product_db.update_seller_rating(seller_id,int_item_rating_map[item_id])
-            return {"success":True}
+                    print("seller_id", seller_id)
+                    self.product_db.update_seller_rating(seller_id, int_item_rating_map[item_id])
+            return {"success": True}
         except Exception as e:
             print(e)
-            return {"success":False}
-        
+            return {"success": False}
 
     def cart_clear(self, data):
         buyer_id = data["body"]["buyer_id"]
 
         try:
-            is_cleared =self.customer_db.delete_cart_by_buyer_id(buyer_id)
+            is_cleared = self.customer_db.delete_cart_by_buyer_id(buyer_id)
 
-            if(is_cleared):
-                return {"cleared":True}
+            if (is_cleared):
+                return {"cleared": True}
             else:
-                return {"cleared":False}
+                return {"cleared": False}
         except Exception as e:
             print(e)
-            return {"cleared":False}
-        
+            return {"cleared": False}
 
     def cart_remove(self, data):
         item_id = data["body"]["item_id"]
@@ -268,58 +278,61 @@ class BuyerServerHelper:
         try:
             cart_item = self.customer_db.get_cart_item(item_id, buyer_id)
 
-            if(cart_item==None):
-                return {"removed":False}
+            if (cart_item == None):
+                return {"removed": False}
             original_quantity = cart_item[3]
-            if(original_quantity<=removing_quantity):
+            if (original_quantity <= removing_quantity):
                 success = self.customer_db.remove_cart_item(item_id, buyer_id)
-                return {"removed":success}
+                return {"removed": success}
             else:
-                self.customer_db.update_cart_item_quantity(item_id, buyer_id, original_quantity-removing_quantity)
-                return {"removed":True}
+                self.customer_db.update_cart_item_quantity(item_id, buyer_id, original_quantity - removing_quantity)
+                return {"removed": True}
         except Exception as e:
             print(e)
-            return {"removed":False}
-        
+            return {"removed": False}
+
     def cart_display(self, data):
         buyer_id = data["body"]["buyer_id"]
-        response_body = {"items":[]}
+        response_body = {"items": []}
         try:
-           
+
             cart_items = self.customer_db.get_buyer_cart_items(buyer_id)
+            print("DIAPLAY CART", cart_items)
             for item in cart_items:
                 item_map = {}
-                item_map["item_name"] = item[5]
-                item_map["item_id"] = item[2]
-                item_map["quantity"] = item[3]
-                item_map["price"] = item[4]
+                item_map["item_name"] = item['name']
+                item_map["item_id"] = item['id']
+                item_map["quantity"] = item['quantity']
+                # item_map["price"] = item['price']
                 response_body["items"].append(item_map)
+                print("MAP::", item_map)
+            print("BODY::", response_body)
             return response_body
-                
+
         except Exception as e:
             print(e)
-            return {"items":None}
+            return {"items": None}
 
     def seller_rating(self, data):
         seller_id = data["body"]["seller_id"]
-        response_body = {"rating":None}
+        response_body = {"rating": None}
         try:
-           
+
             rating = self.product_db.get_seller_rating(seller_id)
             response_body["rating"] = rating
             return response_body
-                
+
         except Exception as e:
             print(e)
             return response_body
-        
+
     def cart_save(self, data):
         buyer_id = data["body"]["buyer_id"]
-        response_body = {"saved":False}
+        response_body = {"saved": False}
         try:
             response_body["saved"] = True
             return response_body
-                
+
         except Exception as e:
             print(e)
             return response_body
@@ -328,8 +341,11 @@ class BuyerServerHelper:
         if 'session_id' in data['body']:
             del sessions[data['body']['session_id']]
 
+    def purchase(self, data):
+        buyer_id = data["body"]["buyer_id"]
+        response = client.service.process_transaction(buyer_id, 123123123)
+        return {'status': response}
+
+
 cleaner_thread = threading.Thread(target=session_cleaner, daemon=True)
 cleaner_thread.start()
-
-
-

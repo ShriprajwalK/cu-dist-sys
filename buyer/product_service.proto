@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package product;
+
+// The ProductService provides operations for managing sellers and their items.
+service ProductService {
+  rpc CreateSeller(CreateSellerRequest) returns (CreateSellerResponse);
+  rpc GetSellerById(GetSellerByIdRequest) returns (GetSellerByIdResponse);
+  rpc SellItem(SellItemRequest) returns (SellItemResponse);
+  rpc UpdatePrice(UpdatePriceRequest) returns (UpdatePriceResponse);
+  rpc RemoveItem(RemoveItemRequest) returns (RemoveItemResponse);
+  rpc GetAllItems(GetAllItemsRequest) returns (GetAllItemsResponse);
+  rpc GetItemsForSeller(GetItemsForSellerRequest) returns (GetItemsForSellerResponse);
+  rpc GetSellerRatingById(GetSellerRatingByIdRequest) returns (GetSellerRatingByIdResponse);
+  rpc UpdateItemRating(UpdateItemRatingRequest) returns (UpdateItemRatingResponse);
+  rpc UpdateSellerRating(UpdateSellerRatingRequest) returns (UpdateSellerRatingResponse);
+  rpc GetItemById(GetItemByIdRequest) returns (GetItemByIdResponse);
+  rpc GetItemPrice(GetItemPriceRequest) returns (GetItemPriceResponse);
+}
+
+message GetItemPriceRequest{
+  int32 item_id = 1;
+}
+
+message GetItemPriceResponse{
+  double price = 1;
+}
+
+
+message GetItemByIdRequest{
+  int32 item_id = 1;
+}
+
+message GetItemByIdResponse{
+  Item items = 1;
+}
+
+
+message UpdateSellerRatingRequest{
+  int32 seller_id = 1;
+  int32 rating = 2;
+}
+
+message UpdateSellerRatingResponse{
+  bool success = 1;
+}
+
+message UpdateItemRatingRequest{
+  int32 item_id = 1;
+  string password = 2;
+}
+
+message UpdateItemRatingResponse{
+  bool success = 1;
+}
+
+message CreateSellerRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message CreateSellerResponse {
+  bool is_created = 1;
+}
+
+message GetSellerByIdRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message GetSellerByIdResponse {
+  int32 seller_id = 1;
+}
+
+message SellItemRequest {
+  int32 seller_id = 1;
+  string name = 2;
+  string category = 3;
+  string keywords = 4;
+  string condition = 5;
+  double price = 6;
+  int32 quantity = 7;
+}
+
+message SellItemResponse {
+  bool success = 1;
+}
+
+message UpdatePriceRequest {
+  int32 item_id = 1;
+  double price = 2;
+}
+
+message UpdatePriceResponse {
+  bool success = 1;
+}
+
+message RemoveItemRequest {
+  int32 item_id = 1;
+  int32 quantity = 2;
+}
+
+message RemoveItemResponse {
+  bool success = 1;
+}
+
+message GetAllItemsRequest {}
+
+message GetAllItemsResponse {
+  repeated Item items = 1;
+}
+
+message GetItemsForSellerRequest {
+  int32 seller_id = 1;
+}
+
+message GetItemsForSellerResponse {
+  repeated Item items = 1;
+}
+
+message GetSellerRatingByIdRequest {
+  int32 seller_id = 1;
+}
+
+message GetSellerRatingByIdResponse {
+  int32 rating = 1;
+}
+
+// Item details
+message Item {
+  int32 id = 1;
+  int32 seller_id = 2;
+  string name = 3;
+  int32 category = 4;
+  string keywords = 5;
+  string condition = 6;
+  double price = 7;
+  int32 quantity = 8;
+  int32 rating = 9;
+  string description = 10;
+}

@@ -58,6 +58,8 @@ class BuyerClient:
             request['body']['password'] = self.password
         if self.session_id:
             request['body']['session_id'] = self.session_id
+        if self.id:
+            request['body']['buyer_id'] = self.id
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.host, self.port))
@@ -143,12 +145,12 @@ class BuyerClient:
         response = self.send_request(request)
         response_body = response["body"]
         items = response_body["items"] 
-        if(len(items)==0 or items== None):
+        if(items == None or len(items) == 0):
             print("No items in the cart")
         else:
-            table = PrettyTable(["Name", "Id", "Quantity", "Price"])
+            table = PrettyTable(["Name", "Id", "Quantity"])
             for item in items:
-                table.add_row([item["item_name"], item["item_id"], item["quantity"], item["price"]])
+                table.add_row([item["item_name"], item["item_id"], item["quantity"]])
             print(table, "\n")
 
     def cart_clear(self):
@@ -223,9 +225,15 @@ class BuyerClient:
 
     def make_purchase(self):
         #TBD
-        # # We will have to implement this anyway to test history, feedback and seller rating.
         request = {"action": 'purchase', 'type': 'buyer', 'body': {}}
-        return self.send_request(request)
+        response = self.send_request(request)
+        status = response['body']['status'][0]
+        if status == "Yes":
+            print('Purchase successful')
+        else:
+            print('Purchase not successful')
+        print()
+
 
 
 if __name__ == "__main__":

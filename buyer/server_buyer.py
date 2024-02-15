@@ -1,6 +1,6 @@
 import socket
 import json
-from buyer.server_buyer_helper import *
+from server_buyer_helper import *
 import sys
 
 
