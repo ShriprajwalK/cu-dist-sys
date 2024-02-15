@@ -1,7 +1,7 @@
 import socket
 import psycopg2
 import json
-from seller.server_seller_helper import *
+from server_seller_helper import *
 import sys
 
 
