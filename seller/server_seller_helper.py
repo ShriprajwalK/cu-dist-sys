@@ -1,4 +1,4 @@
-from .product_database_connect import ProductDatabaseConnection
+from product_database_connect import ProductDatabaseConnection
 import time
 import uuid
 import threading

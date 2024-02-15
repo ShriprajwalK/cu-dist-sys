@@ -27,6 +27,7 @@ class Dao:
                 cursor.execute(insert_query)
             self.connection.commit()
             print("Buyer Account created successfully.")
+            return True
 
         except Exception as e:
             print(f"Error: Unable to create buyer.\n{e}")
@@ -78,6 +79,7 @@ class Dao:
                 cursor.execute(insert_query)
             self.connection.commit()
             print("Added Item to Cart successfully.")
+            return True
 
         except Exception as e:
             print(f"Error: Unable to Add to Cart.\n{e}")
@@ -93,6 +95,7 @@ class Dao:
                 cursor.execute(insert_query)
             self.connection.commit()
             print("Deleted Items From Cart successfully.")
+            return True
 
         except Exception as e:
             print(f"Error: Unable to Delete from Cart.\n{e}")
@@ -105,12 +108,17 @@ class Dao:
                 insert_query = sql.SQL("SELECT * FROM shopping_cart where buyer_id = {} AND item_id = {}").format(
                     sql.Literal(buyer_id),sql.Literal(item_id))
                 cursor.execute(insert_query)
-                item = cursor.fetchall()[0]
+                items = cursor.fetchall()
+                print(items)
+                if len(items) == 0:
+                    return False
+                return items[0]
             self.connection.commit()
             return item
 
         except Exception as e:
-            print(f"Error: Unable to Fetch Item From Cart.\n{e}")
+            print(f"Error: Unable to Fetch Item From Cart--> GET CART ITEM.\n{e}")
+            print("BUYER ID: ", buyer_id, item_id)
             self.connection.commit()
             raise e
         
@@ -123,6 +131,7 @@ class Dao:
                 cursor.execute(update_query)
             self.connection.commit()
             print("Cart Item Quantity updated successfully.")
+            return True
         except Exception as e:
             print(f"Error: Unable to update Cart Item's Quantity.\n{e}")
 
@@ -136,6 +145,7 @@ class Dao:
                 cursor.execute(insert_query)
             self.connection.commit()
             print("Deleted Item From Cart successfully.")
+            return True
 
         except Exception as e:
             print(f"Error: Unable to Delete Item from Cart.\n{e}")
@@ -154,7 +164,8 @@ class Dao:
             return items
 
         except Exception as e:
-            print(f"Error: Unable to Fetch Item From Cart.\n{e}")
+            print(f"Error: Unable to Fetch Item From Cart --> BUYER CART ITEMS\n{e}")
+            print(buyer_id)
             self.connection.commit()
             raise e
 

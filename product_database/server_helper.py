@@ -155,6 +155,7 @@ class ServerHelper:
         price = data['body']['price']
         quantity = data['body']['quantity']
         try:
+            print("SELLING ITEM")
             self.dao.sell_item(seller_id, name, category, keywords, condition, price, quantity)
             response_body = {"added_item": True}
         except Exception as e:
