@@ -1,0 +1,420 @@
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c278920f-9c8c-498e-8cd3-0a7468c47303'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.008175325393676759
+RATING: 0.009712672233581543
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd381785c-4858-4183-b78a-7754d6396318'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.00940377712249756
+RATING: 0.008156323432922363
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c4f298e3-919f-46e8-990d-4a8107771595'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.00767984390258789
+RATING: 0.008358597755432129
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '5151d62a-5bac-4a0c-833b-953906373fc9'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.00825345516204834
+RATING: 0.008244705200195313
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c9b4a122-9135-4994-937b-f1bb53d5a9a6'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.011626434326171876
+RATING: 0.008804130554199218
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'c1fcf6f1-376e-42b4-8489-070d43ef6422'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.010614609718322754
+RATING: 0.007782793045043946
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': '16d90857-631b-46e8-a390-59aa20fbfee9'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.010991120338439941
+RATING: 0.008623600006103516
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'fcdc217c-5da6-4446-a3c1-44616f9cfdac'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.011858725547790527
+RATING: 0.00913686752319336
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'd3c8306b-1b13-45e7-bbaf-4679b88230ce'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.009401059150695801
+RATING: 0.010198616981506347
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'login': True, 'message': 'Logged in successfully', 'seller_id': 1, 'session_id': 'ed9e85b8-6c47-43f0-b033-cba52de4734d'}
+Logged in successfully
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+{'rating': 0}
+Seller Rating: 0
+LOGIN: 0.010712099075317384
+RATING: 0.00885472297668457

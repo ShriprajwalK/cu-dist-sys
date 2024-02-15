@@ -4,6 +4,7 @@ import product_service_pb2
 import product_service_pb2_grpc
 from dao import Dao
 import json
+import time
 
 
 def get_db_credentials():
@@ -12,7 +13,9 @@ def get_db_credentials():
 
 
 dao = Dao(get_db_credentials())
-
+operations = 0
+start = time.time()
+maxim = 0
 
 class ProductServiceServicer(product_service_pb2_grpc.ProductServiceServicer):
     def CreateSeller(self, request, context):
@@ -32,6 +35,10 @@ class ProductServiceServicer(product_service_pb2_grpc.ProductServiceServicer):
         return product_service_pb2.SellItemResponse(success=success)
 
     def GetSellerById(self, request, context):
+        global operations, maxim
+        operations += 1
+        maxim = max(maxim, operations / (time.time() - start))
+        print(maxim)
         return product_service_pb2.GetSellerByIdResponse(
             seller_id=dao.get_seller_id(request.username, request.password))
 
@@ -153,6 +160,10 @@ class ProductServiceServicer(product_service_pb2_grpc.ProductServiceServicer):
         return response
 
     def GetSellerRatingById(self, request, context):
+        global operations, maxim
+        operations += 1
+        maxim = max(maxim, operations / (time.time() - start))
+        print(maxim)
         return product_service_pb2.GetSellerRatingByIdResponse(rating=dao.get_seller_rating(request.seller_id))
 
     def RemoveItem(self, request, context):
