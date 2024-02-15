@@ -34,6 +34,13 @@ $ tree -I data
 ```
 
 ## Instructions to run:
+-  
+ ```
+ pip install zeep spyne lxml pytz protobuf grpcio grpcio-tools prettytable psycopg2-binary  --break-system-package
+ sudo apt install git python3 python3-pip docker.io
+ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+ sudo chmod +x /usr/local/bin/docker-compose
+ ```
 - `docker-compose up` to get postgresql up and running. init_customer and init_product scripts are run on startup(check docker-compose.yaml)
 The system comprises of 6 components:
 - Buyer server: Go to the parent of the directory and run: `python -m buyer.server_buyer`
