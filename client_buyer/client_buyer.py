@@ -3,6 +3,7 @@ import json
 from prettytable import PrettyTable
 import threading
 import time
+import requests
 
 SESSION_WARN = 240
 SESSION_TIMEOUT = 300
@@ -24,6 +25,7 @@ class BuyerClient:
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.url = "http://" + str(self.host) + ":" + str(self.port)
         self.username = None
         self.password = None
         self.id = None
@@ -61,90 +63,95 @@ class BuyerClient:
         if self.id:
             request['body']['buyer_id'] = self.id
 
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((self.host, self.port))
-            s.sendall(json.dumps(request).encode('utf-8'))
-            response = s.recv(1024).decode('utf-8')
-            self.active_time = time.time()
-            return json.loads(response)
+        headers = {'Content-type': 'application/json'}
+        url_path = self.url + request["path"]
+        method = request["method"]
+
+        if(method=="get"):
+            response = requests.get(url=url_path, data=json.dumps(request), headers=headers)
+            return response.json()
+        if(method=="put"):
+            response = requests.put(url=url_path, data=json.dumps(request), headers=headers)
+            return response.json()
+        if(method=="post"):
+            response = requests.post(url=url_path, data=json.dumps(request), headers=headers)
+            return response.json()
+        if(method=="delete"):
+            response = requests.delete(url=url_path, data=json.dumps(request), headers=headers)
+            return response.json()
 
     def create_account(self):
         username = input("New Username: ")
         password = input("New Password: ")
-        request = {"action": "create_account", "type": "buyer", 'body': {"username": username, "password": password}}
+        request = {"path": "/create_account", "method": "put", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
 
-        if 'error' in response['body']:
-            print("Account Not Created : ", response["body"]["error"], "\n")
+        if 'error' in response:
+            print("Account Not Created : ", response["error"], "\n")
         else:
-            print(response['body']['message'])
+            print(response['message'])
 
     def login(self):
         username = input("Username: ")
         password = input("Password: ")
-        request = {"action": "login", "type": "buyer", 'body': {"username": username, "password": password}}
+        request = {"path": "/login", "method": "get", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
 
-        if 'error' in response['body']:
-            print("Login Unsuccessful : ", response["body"]["error"], "\n")
+        if 'error' in response:
+            print("Login Unsuccessful : ", response["error"], "\n")
         else:
-            self.set_state(username, password, response["body"]["buyer_id"], response["body"]["session_id"])
-            print(response['body']['message'])
+            self.set_state(username, password, response["buyer_id"], response["session_id"])
+            print(response['message'])
 
         return response
 
     def logout(self):
-        request = {'actions': 'logout', 'type': 'buyer', 'body': {}}
+        request = {'actions': '/logout', 'method': 'delete', 'body': {}}
         self.reset_state()
         print("Logged Out Successfully \n")
 
     def search(self):
         item_category = input("Item Category: ")
         keywords = input("Give atleast 5 comma separated keywords: ")
-        request = {"action": "search", "type": "buyer", 'body': {"item_category": item_category, 'keywords': keywords}}
+        request = {"path": "/search", "method": "get", 'body': {"item_category": item_category, 'keywords': keywords}}
         response = self.send_request(request)
 
-        response_body = response["body"]
-        table = PrettyTable(["Id", "Quantity", "Price", "Rating"])
-        for item in response_body["items"]:
+        table = PrettyTable(["Id","Name", "Quantity", "Price", "Rating"])
+        for item in response["items"]:
             item_name = item["item_name"]
             item_id = item["item_id"]
             quantity = item["quantity"]
             price = item["price"]
             rating = item["rating"]
-            table.add_row([item_name, item_id, quantity, price, rating])
+            table.add_row([item_id,item_name, quantity, price, rating])
 
         print(table, "\n")
 
     def cart_add(self):
         item_id = int(input("Item Id: "))
         quantity = int(input("Quantity: "))
-        request = {"action": "cart_add", "type": "buyer", 'body': {"buyer_id": self.id, "item_id": item_id, 'quantity': quantity}}
+        request = {"path": "/cart_add", "method": "put", 'body': {"buyer_id": self.id, "item_id": item_id, 'quantity': quantity}}
         response = self.send_request(request)
 
-        response_body = response["body"]
-
-        if response_body["add"]:
+        if response["add"]:
             print("Item Added to the Cart", "\n")
         else:
-            print("Could Not add to the because:", response_body["message"], "\n")
+            print("Could Not add to the because:", response["message"], "\n")
 
     def cart_remove(self):
         item_id = int(input("Item Id: "))
         quantity = int(input("Quantity: "))
-        request = {"action": "cart_remove", "type": "buyer", 'body': { "buyer_id": self.id, "item_id": item_id, 'quantity': quantity}}
+        request = {"path": "/cart_remove", "method": "delete", 'body': { "buyer_id": self.id, "item_id": item_id, 'quantity': quantity}}
         response = self.send_request(request)
-        response_body = response["body"]
-        if response_body['removed']:
+        if response['removed']:
             print("Item Successfully Removed")
         else:
             print("Item Not Found in the Cart")
 
     def cart_display(self):
-        request = {"action": "cart_display", "type": "buyer", 'body': {"buyer_id": self.id}}
+        request = {"path": "/cart_display", "method": "get", 'body': {"buyer_id": self.id}}
         response = self.send_request(request)
-        response_body = response["body"]
-        items = response_body["items"] 
+        items = response["items"]
         if(items == None or len(items) == 0):
             print("No items in the cart")
         else:
@@ -154,28 +161,25 @@ class BuyerClient:
             print(table, "\n")
 
     def cart_clear(self):
-        request = {"action": "cart_clear", "type": "buyer", 'body': {"buyer_id":self.id}}
+        request = {"path": "/cart_clear", "method": "delete", 'body': {"buyer_id":self.id}}
         response = self.send_request(request)
-        response_body = response["body"]
-        if(response_body["cleared"]):
+        if(response["cleared"]):
             print("Cart Cleared")
         else:
             print("Cart not Cleared")
 
     def cart_save(self):
-        request = {"action": "cart_save", "type": "buyer", 'body': {"buyer_id":self.id}}
+        request = {"path": "/cart_save", "method": "put", 'body': {"buyer_id":self.id}}
         response = self.send_request(request)
-        response_body = response["body"]
-        if(response_body["saved"]):
+        if(response["saved"]):
             print("Cart Saved")
         else:
             print("Cart not Saved")
 
     def provide_feedback(self):
-        request = {"action": "get_purchase_history", "type": "buyer", 'body': {"buyer_id":self.id}}
+        request = {"path": "/get_purchase_history", "method": "get", 'body': {"buyer_id":self.id}}
         response = self.send_request(request)
-        response_body = response['body']
-        items = response_body["items"]
+        items = response["items"]
         if(items==None or len(items)==0):
             print("No items purchased")
             return
@@ -187,10 +191,10 @@ class BuyerClient:
                 rating = int(input(input_string))
                 item_rating[item_id] = rating
 
-        request = {"action": "item_rating", "type": "buyer", 'body': {"rating":item_rating}}
+        request = {"path": "/item_rating", "method": "put", 'body': {"rating":item_rating}}
         response = self.send_request(request)
 
-        if(response["body"]["success"]==True):
+        if(response["success"]==True):
             print("Feedback Stored")
         else:
             print("Feedback Not stored. Try Again")
@@ -198,25 +202,24 @@ class BuyerClient:
 
     def seller_rating(self):
         seller_id = int(input("Seller Id: "))
-        request = {"action": "seller_rating", "type": "buyer", 'body': {'seller_id': seller_id}}
+        request = {"path": "/seller_rating", "method": "get", 'body': {'seller_id': seller_id}}
         response = self.send_request(request)
 
-        if(response["body"]["rating"]==None):
+        if(response["rating"]==None):
             print("Seller Id does not exist")
         else:
-            print("Seller Rating:", response["body"]["rating"])
+            print("Seller Rating:", response["rating"])
 
     def history(self):
-        request = {"action": "get_purchase_history", "type": "buyer", 'body': {"buyer_id":self.id}}
+        request = {"path": "/get_purchase_history", "method": "get", 'body': {"buyer_id":self.id}}
         response = self.send_request(request)
-        response_body = response['body']
-        items = response_body["items"]
+        items = response["items"]
         if(items==None or len(items)==0):
             print("No items purchased")
             return
         else:
             table = PrettyTable(["Name", "Id", "Quantity"])
-            for item in response_body["items"]:
+            for item in response["items"]:
                 item_name = item["item_name"]
                 item_id = item["item_id"]
                 quantity = item["quantity"]
@@ -224,16 +227,13 @@ class BuyerClient:
             print(table, "\n")
 
     def make_purchase(self):
-        #TBD
-        request = {"action": 'purchase', 'type': 'buyer', 'body': {}}
+        request = {"path": '/purchase', "method": "post", 'body': {}}
         response = self.send_request(request)
-        status = response['body']['status'][0]
-        if status == "Yes":
-            print('Purchase successful')
-        else:
-            print('Purchase not successful')
-        print()
 
+        if response["status"] == 'Yes':
+            print("Purchase Not made")
+        else:
+            print("Purchase Made Successfully")
 
 
 if __name__ == "__main__":

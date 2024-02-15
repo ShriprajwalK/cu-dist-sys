@@ -3,6 +3,10 @@ import psycopg2
 import json
 from server_seller_helper import *
 import sys
+from seller.sessions_manager import *
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
 
 
 class SellerServer:
@@ -11,35 +15,88 @@ class SellerServer:
         self.server_port = server_port
 
         self.server_seller_helper = SellerServerHelper()
-        self.create_server_socket()
+        self.sessions_manager = SessionsManager()
+        self.setup_routes()
+        self.session_cleaner()
 
-    def create_server_socket(self):
-        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind((self.server_host, self.server_port))
-        server_socket.listen(1000)
-        print("Server Running and Accepting Client Request")
+    def run(self):
+        app.run(host=self.server_host, port=self.server_port)
 
-        try:
-            while True:
-                client_socket, client_address = server_socket.accept()
-                print(f"Accepted connection from {client_address}")
-                self.handle_client_request(client_socket)
-        except KeyboardInterrupt:
-            print("\nCtrl+C pressed. Shutting down.")
-            server_socket.close()
-            sys.exit(0)
+    def session_cleaner(self):
+        cleaner_thread = threading.Thread(target=self.sessions_manager.session_cleaner, daemon=True)
+        cleaner_thread.start()
 
-    def handle_client_request(self, client_socket):
-        data = client_socket.recv(1024).decode('utf-8')
-        parsed_data = json.loads(data)
-        print(f"Received data from client: {data}")
-        action = parsed_data['action']
+    def manage_sessions(self, data):
+        session = self.sessions_manager.manage_session(data)
+        if not session['exists']:
+            data['body']['session_id'] = session['session_id']
+        return data
+    
+    def setup_routes(self):
+        
+        @app.route('/login', methods=['GET'])
+        def login():
+            data = request.get_json()
+            data = self.manage_sessions(data)
 
-        # return self.choose_and_execute_action(action,client_socket,parsed_data)
-        response = self.server_seller_helper.choose_and_execute_action(action, parsed_data)
-        print("response", response)
-        client_socket.send(json.dumps(response).encode('utf-8'))
-        client_socket.close()
+            response_data = self.server_seller_helper.login(data)
+            return response_data
+        
+        @app.route('/create_account', methods=['PUT'])
+        def create_account():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+
+            response_data = self.server_seller_helper.create_account(data)
+            return response_data
+        
+        @app.route('/get_rating', methods=['GET'])
+        def get_rating():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+
+            response_data = self.server_seller_helper.get_rating(data)
+            return response_data
+        
+        @app.route('/sell', methods=['POST'])
+        def sell():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+
+            response_data = self.server_seller_helper.sell(data)
+            return response_data
+        
+        @app.route('/update_price', methods=['POST'])
+        def update_price():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+
+            response_data = self.server_seller_helper.update_price(data)
+            return response_data
+        
+        @app.route('/get_items_for_seller', methods=['GET'])
+        def get_items_for_seller():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+            response_data = self.server_seller_helper.get_items_for_seller(data)
+            return response_data
+        
+        @app.route('/cart_save', methods=['PUT'])
+        def cart_save():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+
+            response_data = self.server_seller_helper.cart_save(data)
+            return response_data
+        
+        @app.route('/remove_item', methods=['DELETE'])
+        def remove_item():
+            data = request.get_json()
+            data = self.manage_sessions(data)
+
+            response_data = self.server_seller_helper.remove_item(data)
+            return response_data
+    
 
 
 if __name__ == "__main__":
@@ -47,3 +104,4 @@ if __name__ == "__main__":
     server_port = 1345
 
     seller_server = SellerServer(server_host, server_port)
+    seller_server.run()

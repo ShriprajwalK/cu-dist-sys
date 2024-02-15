@@ -3,6 +3,7 @@ import json
 import threading
 import time
 from prettytable import PrettyTable
+import requests
 
 SESSION_WARN = 240
 SESSION_TIMEOUT = 300
@@ -24,6 +25,7 @@ class SellerClient:
     def __init__(self, host, port):
         self.host = host
         self.port = port
+        self.url = "http://" + str(self.host) + ":" + str(self.port)
         self.username = None
         self.password = None
         self.id = None
@@ -57,36 +59,65 @@ class SellerClient:
         if self.session_id:
             request['body']['session_id'] = self.session_id
 
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((self.host, self.port))
-            s.sendall(json.dumps(request).encode('utf-8'))
-            response = s.recv(1024).decode('utf-8')
-            self.active_time = time.time()
-            return json.loads(response)
+        headers = {'Content-type': 'application/json'}
+        url_path = self.url + request["path"]
+        method = request["method"]
+
+        if(method=="get"):
+            response = requests.get(url=url_path, data=json.dumps(request), headers=headers)
+            print(response.json())
+            return response.json()
+        if(method=="put"):
+            response = requests.put(url=url_path, data=json.dumps(request), headers=headers)
+            print(response.json())
+            return response.json()
+        if(method=="post"):
+            response = requests.post(url=url_path, data=json.dumps(request), headers=headers)
+            print(response.json())
+            return response.json()
+        if(method=="delete"):
+            response = requests.delete(url=url_path, data=json.dumps(request), headers=headers)
+            print(response.json())
+            return response.json()
 
     def create_account(self):
         username = input("New Username: ")
         password = input("New Password: ")
-        request = {"action": "create_account", "type": "seller", 'body': {"username": username, "password": password}}
-        return self.send_request(request)
+        request = {"path": "/create_account", "method": "put", 'body': {"username": username, "password": password}}
+        response = self.send_request(request)
+
+        if 'error' in response:
+            print("Account Not Created : ", response["error"], "\n")
+        else:
+            print(response['message'])
 
     def login(self):
-        username = input("New Username: ")
-        password = input("New Password: ")
-        request = {"action": "login", "type": "seller", 'body': {"username": username, "password": password}}
+        username = input("Username: ")
+        password = input("Password: ")
+        request = {"path": "/login", "method": "get", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
-        self.set_state(username, password, response["body"]["seller_id"], response['body']['session_id'])
+
+        if 'error' in response:
+            print("Login Unsuccessful : ", response["error"], "\n")
+        else:
+            self.set_state(username, password, response["seller_id"], response["session_id"])
+            print(response['message'])
+
         return response
 
     def logout(self):
-        request = {'actions': 'logout', 'type': 'seller', 'body': {}}
+        request = {'actions': '/logout', "method": "get", 'body': {}}
         self.reset_state()
         return self.send_request(request)
 
     def get_rating(self):
-        request = {'action': 'get_rating', 'type': 'seller', 'body': {"seller_id": self.id}}
+        request = {"path": "/get_rating", "method": "get", 'body': {'seller_id': self.id}}
         response = self.send_request(request)
-        print("Rating", response["body"]["rating"])
+
+        if(response["rating"]==None):
+            print("Seller Id does not exist")
+        else:
+            print("Seller Rating:", response["rating"])
 
     def sell(self):
         name = input("Name: ")
@@ -95,7 +126,7 @@ class SellerClient:
         condition = input("Condition: ")
         price = input("Price: ")
         quantity = input("Quantity: ")
-        request = {'action': 'sell', 'type': 'seller',
+        request = {"path": '/sell', "method": "post",
                    'body': {'seller_id': self.id,'name': name, 'category': category, 'keywords': keywords,
                             'condition': condition, 'price': price, 'quantity': quantity}}
 
@@ -104,22 +135,21 @@ class SellerClient:
     def update_price(self):
         item = input("Item id: ")
         updated_price = input("Update Price: ")
-        request = {'action': 'update_price', 'type': 'seller', 'body': {'username': self.username,
+        request = {"path": '/update_price', "method": "post", 'body': {'username': self.username,
                                                                         'password': self.password,
                                                                         'item_id': item,
                                                                         'price': updated_price}}
         return self.send_request(request)
 
     def display(self):
-        request = {'action': 'get_items_for_seller', 'type': 'seller', 'body': {'username': self.username,
+        request = {"path": '/get_items_for_seller', "method": "get", 'body': {'username': self.username,
                                                                                 'password': self.password,
                                                                                 'seller_id': self.id
                                                                                 }
                    }
         response = self.send_request(request)
         table = PrettyTable(["Name", "Id", "Quantity","Price"])
-        print(response)
-        for item in response['body']:
+        for item in response['items']:
             item_name = item['name']
             item_id = item['id']
             quantity = item['quantity']
@@ -131,7 +161,7 @@ class SellerClient:
     def remove_item(self):
         item = input("Item id: ")
         quantity = input("Update Quantity: ")
-        request = {'action': 'remove_item', 'type': 'seller', 'body': {'item_id': item, 'quantity': quantity}}
+        request = {"path": '/remove_item', "method": "delete", 'body': {'item_id': item, 'quantity': quantity}}
         return self.send_request(request)
 
 

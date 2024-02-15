@@ -10,6 +10,8 @@ $ tree -I data
     │   ├── client_buyer.py
     │   ├── server_buyer.py
     │   └── server_buyer_helper.py
+    │   └── sessions_manager.py
+    |
     ├── docker-compose.yaml
     ├── init_dbs.sh
     ├── postgres
@@ -24,6 +26,7 @@ $ tree -I data
     │   ├── server_buyer.py
     │   ├── server_buyer_helper.py
     │   └── server_seller.py
+    │   └── sessions_manager.py
     ├── sql
     │   ├── init_customer.sql
     │   └── init_product.sql
@@ -40,9 +43,9 @@ The system comprises of 6 components:
 - Customer Database: Go to the buyer directory and run: `python customer_database.server.py`
 - Product Database: Go to the buyer directory and run: `python product_database.server.py`
 
-System Design - The 6 components are running on separate servers to simulate a distributed systems environment. The code is written in python. TCP/IP sockets is used for communication and PostgreSQL for the database backend. Also the client side is stateless frontend design, where state information is maintained in the backend databases.
+System Design - The 6 components are running on separate servers to simulate a distributed systems environment. The code is written in python. REST API is implemented for communicating between the client and the server. gRPC is implemented for communication between server and database. PostgreSQL is implemented for the database backend. The server uses SOAP to communicate with the financial transcations. The servers and the databases are hosted on the GCPcloud.Also the client side is stateless frontend design, where state information is maintained in the backend databases.
 
-Current State of the System - All the APIs for seller and buyer are working as stated in this assignment. The Finance transaction is not operational right now. It also includes the purchases API done by the buyer to purchase items from the saved cart.
+Current State of the System - All the APIs for seller and buyer are working as stated in this assignment. The Finance transaction is operational right now. It also includes the purchases API done by the buyer to purchase items from the saved cart.
 
 Assumptions - The password for client and seller is plain text. Currently no security measures are taken like authentication mechanisms to ensure secure transfer of data between the client and the server. None of the data is stored on the server as cache. Therefore if the database stops responding, the server will not recvieve any data to process client's request and the entire system will crash.
 
