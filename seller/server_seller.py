@@ -3,7 +3,7 @@ import psycopg2
 import json
 from server_seller_helper import *
 import sys
-from seller.sessions_manager import *
+from sessions_manager import *
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
