@@ -60,6 +60,8 @@ class BuyerClient:
             request['body']['password'] = self.password
         if self.session_id:
             request['body']['session_id'] = self.session_id
+        if self.id:
+            request['body']['buyer_id'] = self.id
 
         headers = {'Content-type': 'application/json'}
         url_path = self.url + request["path"]
@@ -149,13 +151,13 @@ class BuyerClient:
     def cart_display(self):
         request = {"path": "/cart_display", "method": "get", 'body': {"buyer_id": self.id}}
         response = self.send_request(request)
-        items = response["items"] 
-        if(len(items)==0 or items== None):
+        items = response["items"]
+        if(items == None or len(items) == 0):
             print("No items in the cart")
         else:
-            table = PrettyTable(["Name", "Id", "Quantity", "Price"])
+            table = PrettyTable(["Name", "Id", "Quantity"])
             for item in items:
-                table.add_row([item["item_name"], item["item_id"], item["quantity"], item["price"]])
+                table.add_row([item["item_name"], item["item_id"], item["quantity"]])
             print(table, "\n")
 
     def cart_clear(self):
@@ -228,7 +230,7 @@ class BuyerClient:
         request = {"path": '/purchase', "method": "post", 'body': {}}
         response = self.send_request(request)
 
-        if(response["purchase"] == True):
+        if response["status"] == 'Yes':
             print("Purchase Not made")
         else:
             print("Purchase Made Successfully")

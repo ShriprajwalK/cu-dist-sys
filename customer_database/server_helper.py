@@ -1,5 +1,5 @@
 import json
-from customer_database.dao import Dao
+from dao import Dao
 
 def get_db_credentials():
     with open('./customer_database/credentials.json') as credentials:

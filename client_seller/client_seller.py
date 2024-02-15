@@ -150,10 +150,10 @@ class SellerClient:
         response = self.send_request(request)
         table = PrettyTable(["Name", "Id", "Quantity","Price"])
         for item in response['items']:
-            item_name = item[6]
-            item_id = item[0]
-            quantity = item[2]
-            price = item[3]
+            item_name = item['name']
+            item_id = item['id']
+            quantity = item['quantity']
+            price = item['price']
             if quantity!=0:
                 table.add_row([item_name, item_id, quantity,price])
         print(table, "\n")

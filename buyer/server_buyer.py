@@ -1,5 +1,5 @@
 import json
-from buyer.server_buyer_helper import *
+from server_buyer_helper import *
 import requests
 from flask import Flask, jsonify, request
 from buyer.sessions_manager import *

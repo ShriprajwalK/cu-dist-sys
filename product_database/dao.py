@@ -38,7 +38,7 @@ class Dao:
             print(f"Error: Unable to find seller's Credentials.\n{e}")
             self.connection.commit()
             raise e
-        
+
     def create_seller(self, username, password):
         try:
             with self.connection.cursor() as cursor:
@@ -47,7 +47,9 @@ class Dao:
                 )
                 cursor.execute(insert_query)
             self.connection.commit()
-            print("Seller Account created successfully.")
+            message = "Seller Account created successfully."
+            print(message)
+            return message
 
         except Exception as e:
             print(f"Error: Unable to create seller account.\n{e}")
@@ -60,7 +62,8 @@ class Dao:
                 insert_query = sql.SQL(
                     "INSERT INTO item (seller_id,name,price,description,category,quantity) VALUES ({}, {}, {}, {}, "
                     "{}, {});").format(
-                    sql.Literal(seller_id), sql.Literal(name), sql.Literal(price), sql.Literal(description), sql.Literal(category), sql.Literal(quantity),
+                    sql.Literal(seller_id), sql.Literal(name), sql.Literal(price), sql.Literal(description),
+                    sql.Literal(category), sql.Literal(quantity),
                 )
                 cursor.execute(insert_query)
             self.connection.commit()
@@ -95,10 +98,10 @@ class Dao:
             self.connection.commit()
             return item
         except Exception as e:
+            print(e)
             print(f"Error: Unable to Fetch Item details.\n{e}")
             self.connection.commit()
             raise e
-    
 
     def get_item_seller_id(self, item_id):
         try:
@@ -113,7 +116,7 @@ class Dao:
             print(f"Error: Unable to Fetch Seller Id.\n{e}")
             self.connection.commit()
             raise e
-    
+
     def update_item_rating(self, item_id, item_rating):
         try:
             with self.connection.cursor() as cursor:
@@ -126,7 +129,6 @@ class Dao:
         except Exception as e:
             print(f"Error: Unable to update buyer.\n{e}")
 
-
     def update_seller_rating(self, seller_id, item_rating):
         try:
             with self.connection.cursor() as cursor:
@@ -138,7 +140,6 @@ class Dao:
             print("buyer updated successfully.")
         except Exception as e:
             print(f"Error: Unable to update buyer.\n{e}")
-
 
     def get_item_price(self, item_id):
         try:
@@ -153,7 +154,7 @@ class Dao:
             print(f"Error: Unable to Fetch Seller Id.\n{e}")
             self.connection.commit()
             raise e
-        
+
     def get_seller_rating(self, seller_id):
         try:
             with self.connection.cursor() as cursor:
@@ -165,7 +166,7 @@ class Dao:
             return rating
 
         except Exception as e:
-            print(f"Error: Unable to Fetch Item From Cart.\n{e}")
+            print(f"Error: Unable to Fetch SELLER RATING.\n{e}")
             self.connection.commit()
             raise e
 
@@ -198,7 +199,7 @@ class Dao:
                 print("update_query::", update_query)
                 cursor.execute(update_query)
             self.connection.commit()
-            return {"message": "Items Removed"}
+            return True
 
         except Exception as e:
             print(f"Error: Unable to Items for seller.\n{e}")
@@ -213,7 +214,7 @@ class Dao:
                 )
                 cursor.execute(update_query)
             self.connection.commit()
-            return {"message": "Items Removed"}
+            return True
 
         except Exception as e:
             print(f"Error: Unable to Items for seller.\n{e}")
