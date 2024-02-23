@@ -155,11 +155,12 @@ class ServerHelper:
         price = data['body']['price']
         quantity = data['body']['quantity']
         try:
+            print("SELLING ITEM")
             self.dao.sell_item(seller_id, name, category, keywords, condition, price, quantity)
-            response_body = {"response": "Successfully added item to sell"}
+            response_body = {"added_item": True}
         except Exception as e:
             print(e)
-            response_body = {"error": str(e)}
+            response_body = {"added_item": False, "error": str(e)}
         return response_body
 
 
@@ -171,7 +172,7 @@ class ServerHelper:
             response_body = {"items": items}
         except Exception as e:
             print(e)
-            response_body = {"error": str(e)}
+            response_body = {"items": None, "error": str(e)}
         return response_body
 
     def remove_item(self, data):
@@ -179,10 +180,10 @@ class ServerHelper:
         quantity = data["body"]["quantity"]
         try:
             message = self.dao.remove_item(item_id, quantity)
-            response_body = {"message": "Removed items succesffully"}
+            response_body = {"removed": True}
         except Exception as e:
             print(e)
-            response_body = {"error": str(e)}
+            response_body = {"removed": False, "error": str(e)}
         return response_body
 
         pass
@@ -192,10 +193,10 @@ class ServerHelper:
         price = data["body"]["price"]
         try:
             message = self.dao.update_price(item_id, price)
-            response_body = {"message": "Updated price succesffully"}
+            response_body = {"updated": True}
         except Exception as e:
             print(e)
-            response_body = {"error": str(e)}
+            response_body = {"updated": False, "error": str(e)}
         return response_body
         pass
 
