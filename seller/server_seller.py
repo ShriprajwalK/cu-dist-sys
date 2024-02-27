@@ -19,6 +19,10 @@ class SellerServer:
         self.setup_routes()
         self.session_cleaner()
 
+        self.operations = 0
+        self.start = time.time()
+        self.max = 0
+
     def run(self):
         app.run(host=self.server_host, port=self.server_port)
 
@@ -38,10 +42,12 @@ class SellerServer:
         def login():
             data = request.get_json()
             data = self.manage_sessions(data)
-
+            self.operations += 1
             response_data = self.server_seller_helper.login(data)
+            self.max = max(self.max, self.operations / (time.time() - self.start))
+            print(self.max)
             return response_data
-        
+
         @app.route('/create_account', methods=['PUT'])
         def create_account():
             data = request.get_json()
@@ -54,8 +60,10 @@ class SellerServer:
         def get_rating():
             data = request.get_json()
             data = self.manage_sessions(data)
-
+            self.operations += 1
             response_data = self.server_seller_helper.get_rating(data)
+            self.max = max(self.max, self.operations / (time.time() - self.start))
+            print(self.max)
             return response_data
         
         @app.route('/sell', methods=['POST'])
@@ -101,7 +109,7 @@ class SellerServer:
 
 if __name__ == "__main__":
     server_host = "localhost"
-    server_port = 1345
+    server_port = 1235
 
     seller_server = SellerServer(server_host, server_port)
     seller_server.run()
