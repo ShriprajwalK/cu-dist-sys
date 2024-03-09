@@ -5,7 +5,7 @@ import pandas as pd
 
 NTPDELTA = 2208988800.0
 buf = 1024
-FILENAME = 'public.csv'
+FILENAME = '.csv'
 
 def to_ntp_time(t):
     t += NTPDELTA
@@ -65,7 +65,7 @@ class Connection:
         except Exception as e:
             print("ERROR")
             print(e)
-            return (-1, -1, -1, -1)
+            return (-1, -1, -1, -1, -1)
 
         t4 = to_ntp_time(time.time())
 
@@ -128,7 +128,9 @@ if __name__ == "__main__":
     timestamps_list = [[], [], [], []]
     header = 0
     for i in range(15):
-        connection = Connection("pool.ntp.org", 123)
+        print(f'on {i} of 15')
+        # connection = Connection("pool.ntp.org", 123)
+        connection = Connection("35.192.154.114", 1234)
         if header == 0:
             header += 1
             connection.file.write('Burst No., Message Pair No., o(i), d(i), theta(i), delta(i), t1, t2, t3, t4\n')
@@ -156,7 +158,7 @@ if __name__ == "__main__":
             receive_timestamp = new_receive_timestamp
             message_pair_list.append(i + 1)
             connection.file.write(f'{burst}, {i+1}, {offset}, {delay}, {theta}, {delta}, {timestamps_list[0]}, {timestamps_list[1]}, {timestamps_list[2]}, {timestamps_list[3]}\n')
-        time.sleep(5)
+        time.sleep(240)
 
     data = {
         'Burst No.': burst_list,
