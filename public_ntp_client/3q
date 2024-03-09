@@ -1,0 +1,36 @@
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sb
+import numpy as np
+
+# Load the CSV file
+df = pd.read_csv('public.csv')
+print(df)
+
+# Combine 'Burst No.' and 'Message Pair No.' for a unique identifier
+df['Burst_Message'] = df.apply(lambda row: f"{row['Burst No.']}, {row['Message Pair No.']}", axis=1)
+
+# Assuming 'theta(i)' and 'delta(i)' are to be plotted
+theta_values = df['theta(i)'].values
+delta_values = df['delta(i)'].values
+
+# Creating an array of indices for x-axis
+x = np.arange(len(df))
+
+# Plotting
+plt.figure(figsize=(14, 8))
+
+plt.plot(x, theta_values, label='theta(i)', marker='o')
+plt.plot(x, delta_values, label='delta(i)', marker='x')
+
+# Setting x-axis to show combined 'Burst No., Message Pair No.' values
+plt.xticks(x, df['Burst_Message'].values, rotation=45, ha="right")
+
+plt.xlabel('Burst No., Message Pair No.')
+plt.ylabel('Value')
+plt.title('Theta(i) and Delta(i) for each Burst and Message Pair')
+plt.legend()
+plt.grid(True)
+plt.tight_layout()  # Adjust layout to not cut off labels
+plt.show()
