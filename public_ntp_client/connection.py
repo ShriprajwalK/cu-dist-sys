@@ -5,48 +5,64 @@ import struct, time
 NTPDELTA = 2208988800.0
 buf = 1024
 
+
 def to_ntp_time(t):
-        t += NTPDELTA
-        return (int(t) << 32) + int(abs(t - int(t)) * (1<<32))
+    t += NTPDELTA
+    return (int(t) << 32) + int(abs(t - int(t)) * (1 << 32))
+
 
 def create_request_packet(org_ts, rcv_ts, xmt_ts):
-       packet = struct.pack('!B', 0x1b) + 23 * b'\0' + struct.pack('!Q', int(org_ts)) + struct.pack('!Q', int(rcv_ts)) + struct.pack('!Q', int(xmt_ts))
-       return packet
+    packet = struct.pack('!B', 0x1b) + 23 * b'\0' + struct.pack('!Q', int(org_ts)) + struct.pack('!Q',
+                                                                                                 int(rcv_ts)) + struct.pack(
+        '!Q', int(xmt_ts))
+    return packet
 
-def calc_delay(t1,t2,t3,t4):
-       delay = (t4-t1) - (t3-t2)
-       return delay
 
-def calc_offset(t1,t2,t3,t4):
-       offset = ((t2-t1) + (t3-t4))/2
-       return offset
+def calc_delay(t1, t2, t3, t4):
+    delay = (t4 - t1) - (t3 - t2)
+    return delay
+
+
+def calc_offset(t1, t2, t3, t4):
+    offset = ((t2 - t1) + (t3 - t4)) / 2
+    return offset
+
 
 def ge_min_delay(delays):
-       return delays.index(min(delays))
+    return delays.index(min(delays))
 
- 
+
 class Connection:
 
     def __init__(self, host, port):
-           self.host = host
-           self.port = port
+        self.host = host
+        self.port = port
 
     def sendRequest(self, org_ts, rcv_ts):
-
         xmt_ts = to_ntp_time(time.time())
-        ntp_packet = create_request_packet(org_ts, rcv_ts, xmt_ts)
-        
-        address = (self.host,self.port)
+        a = self.send(org_ts, rcv_ts, xmt_ts)
+        ## timeout / message loss
+        while a[2] == -1:
+            print('Retrying:::')
+            xmt_ts = to_ntp_time(time.time())
+            a = self.send(org_ts, rcv_ts, xmt_ts) # to_ntp_time(time.time())
+        return a
 
-        client = socket.socket( AF_INET, SOCK_DGRAM)
+    def send(self, org_ts, rcv_ts, xmt_ts):
+
+        ntp_packet = create_request_packet(org_ts, rcv_ts, xmt_ts)
+
+        address = (self.host, self.port)
+
+        client = socket.socket(AF_INET, SOCK_DGRAM)
         client.settimeout(1)
         client.sendto(ntp_packet, address)
         try:
-                msg, address = client.recvfrom( buf )
+            msg, address = client.recvfrom(buf)
         except Exception as e:
-                print(e)
-                return None
-        
+            print(e)
+            return (-1, -1, -1, -1)
+
         t4 = to_ntp_time(time.time())
 
         unpacked_response = struct.unpack("!1B1B1b1b3I4Q", msg)
@@ -64,9 +80,13 @@ class Connection:
         originate_timestamp = unpacked_response[8]
         receive_timestamp = unpacked_response[9]
         transmit_timestamp = unpacked_response[10]
-        print(unpacked_response)
+        # print(unpacked_response)
 
-        print(struct.unpack( "!12I", msg ))
+        ## delayesd duplicate
+        if(originate_timestamp < xmt_ts):
+            return (-1,-1,-1,-1)
+
+        # print(struct.unpack("!12I", msg))
         # t1 = time.ctime(struct.unpack( "!12I", msg )[6] - NTPDELTA).replace("  "," ") ### origniate
         # t2 = time.ctime(struct.unpack( "!12I", msg )[8] - NTPDELTA).replace("  "," ") ### receive
         # t3 = time.ctime(struct.unpack( "!12I", msg )[10] - NTPDELTA).replace("  "," ") ### transmit
@@ -82,25 +102,30 @@ class Connection:
         t3 = transmit_timestamp
         t4 = t4
 
-        delay = calc_delay(t1,t2,t3,t4)
-        offset = calc_offset(t1,t2,t3,t4)
+        delay = calc_delay(t1, t2, t3, t4)
+        offset = calc_offset(t1, t2, t3, t4)
         return delay, offset, originate_timestamp, receive_timestamp
- 
+
+
 if __name__ == "__main__":
 
-        packet_bursts = 1
-        originate_timestamp,  = 0
-        receive_timestamp = 0
-        connection = Connection("127.0.0.1", 82)
-        # connection = Connection("pool.ntp.org", 123)
+    packet_bursts = 8
+    originate_timestamp = 0
+    receive_timestamp = 0
+    connection = Connection("127.0.0.1", 82)
+    # connection = Connection("pool.ntp.org", 123)
+    # connection = Connection("35.192.154.114", 1234)
 
-        delay_list = []
-        offset_list = []
-        for burst in range(packet_bursts):
-                delay, offset, new_originate_timestamp, new_receive_timestamp = connection.sendRequest(
-                       originate_timestamp, receive_timestamp
-                ) 
-                delay_list.append(delay)
-                offset_list.append(offset)
-                new_originate_timestamp = originate_timestamp
-                new_receive_timestamp = receive_timestamp
+    delay_list = []
+    offset_list = []
+    for burst in range(packet_bursts):
+        delay, offset, new_originate_timestamp, new_receive_timestamp = connection.sendRequest(
+            originate_timestamp, receive_timestamp
+        )
+        delay_list.append(delay)
+        offset_list.append(offset)
+        originate_timestamp = new_originate_timestamp
+        receive_timestamp = new_receive_timestamp
+
+    print(delay_list)
+    print(offset_list)
