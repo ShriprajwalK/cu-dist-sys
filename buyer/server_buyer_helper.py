@@ -6,8 +6,8 @@ import uuid
 import threading
 
 from zeep import Client
-wsdl_url = 'http://127.0.0.1:8000/?wsdl'
-client = Client(wsdl_url)
+# wsdl_url = 'http://127.0.0.1:8000/?wsdl'
+# client = Client(wsdl_url)
 
 
 
@@ -271,5 +271,5 @@ class BuyerServerHelper:
 
     def purchase(self, data):
         buyer_id = data["body"]["buyer_id"]
-        response = client.service.process_transaction(buyer_id, 123123123)
-        return {'status': response}
+        # response = client.service.process_transaction(buyer_id, 123123123)
+        # return {'status': response}

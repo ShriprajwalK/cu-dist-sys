@@ -92,8 +92,8 @@ class SellerClient:
             print(response['message'])
 
     def login(self):
-        username = 'asdf' #input("New Username: ")
-        password = 'asdf' # input("New Password: ")
+        username =  input("New Username: ")
+        password =   input("New Password: ")
         request = {"path": "/login", "method": "get", 'body': {"username": username, "password": password}}
         response = self.send_request(request)
 
@@ -167,56 +167,56 @@ class SellerClient:
 
 if __name__ == "__main__":
     #seller = SellerClient('34.132.91.142', 1235)
-    seller = SellerClient('localhost', 1235)
+    seller = SellerClient('localhost', 1345)
     ## benchmark
-    login_times = []
-    for i in range(10):
-        start = time.time()
-        seller.login()
-        login_times.append(time.time()-start)
+    # login_times = []
+    # for i in range(10):
+    #     start = time.time()
+    #     seller.login()
+    #     login_times.append(time.time()-start)
 
-    rating_times = []
-    for i in range(10):
+    # rating_times = []
+    # for i in range(10):
 
-        start = time.time()
-        seller.get_rating()
-        rating_times.append(time.time()-start)
-    print("LOGIN:", sum(login_times) / len(login_times))
-    print("RATING:", sum(rating_times) / len(rating_times))
+    #     start = time.time()
+    #     seller.get_rating()
+    #     rating_times.append(time.time()-start)
+    # print("LOGIN:", sum(login_times) / len(login_times))
+    # print("RATING:", sum(rating_times) / len(rating_times))
     ## benchmark end
 
-    # warner_thread = threading.Thread(target=warn_or_logout, daemon=True, args=(seller,))
-    # warner_thread.start()
-    # while True:
-    #     if not seller.check_state():
-    #         print("1. Create Account \n2. Login \n")
-    #         action_number = int(input("Action Number: "))
-    #         print()
-    #         if action_number == 1:
-    #             seller.create_account()
-    #         elif action_number == 2:
-    #             seller.login()
-    #         else:
-    #             print("Give Appropriate Action Number")
-    #             continue
-    #     else:
-    #         print("1. Create Account \n2. Logout \n3. Get Rating \n4. Sell \n5. Change Price \
-    #               \n6. Remove item \n7. Display \n")
-    #
-    #         action_number = int(input("Action Number: "))
-    #
-    #         print()
-    #         if action_number == 1:
-    #             seller.create_account()
-    #         elif action_number == 2:
-    #             seller.logout()
-    #         elif action_number == 3:
-    #             seller.get_rating()
-    #         elif action_number == 4:
-    #             seller.sell()
-    #         elif action_number == 5:
-    #             seller.update_price()
-    #         elif action_number == 6:
-    #             seller.remove_item()
-    #         elif action_number == 7:
-    #             seller.display()
+    warner_thread = threading.Thread(target=warn_or_logout, daemon=True, args=(seller,))
+    warner_thread.start()
+    while True:
+        if not seller.check_state():
+            print("1. Create Account \n2. Login \n")
+            action_number = int(input("Action Number: "))
+            print()
+            if action_number == 1:
+                seller.create_account()
+            elif action_number == 2:
+                seller.login()
+            else:
+                print("Give Appropriate Action Number")
+                continue
+        else:
+            print("1. Create Account \n2. Logout \n3. Get Rating \n4. Sell \n5. Change Price \
+                  \n6. Remove item \n7. Display \n")
+    
+            action_number = int(input("Action Number: "))
+    
+            print()
+            if action_number == 1:
+                seller.create_account()
+            elif action_number == 2:
+                seller.logout()
+            elif action_number == 3:
+                seller.get_rating()
+            elif action_number == 4:
+                seller.sell()
+            elif action_number == 5:
+                seller.update_price()
+            elif action_number == 6:
+                seller.remove_item()
+            elif action_number == 7:
+                seller.display()

@@ -1,9 +1,11 @@
 import psycopg2
 from psycopg2 import sql
+from pysyncobj import SyncObj, replicated
 
 
-class Dao:
-    def __init__(self, db_params):
+class Dao(SyncObj):
+    def __init__(self,db_params, selfNodeAddr, otherNodeAddrs):
+        super(Dao, self).__init__(selfNodeAddr, otherNodeAddrs)
         self.db_params = db_params
         try:
             self.connection = psycopg2.connect(**self.db_params)
@@ -11,6 +13,7 @@ class Dao:
             print(f"Error: Unable to connect to the database.\n{e}")
             raise e
 
+    @replicated
     def database_init(self, sql_script):
         with self.connection.cursor() as cursor:
             cursor.execute(open(sql_script, "r").read())
@@ -18,6 +21,7 @@ class Dao:
         self.connection.commit()
         print("SQL script executed successfully.")
 
+    @replicated
     def get_seller_id(self, username, password):
         try:
             seller_id = None
@@ -39,6 +43,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def create_seller(self, username, password):
         try:
             with self.connection.cursor() as cursor:
@@ -56,6 +61,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def create_item(self, seller_id, name, price, description, category, quantity):
         try:
             with self.connection.cursor() as cursor:
@@ -74,6 +80,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def get_all_items(self):
         try:
             with self.connection.cursor() as cursor:
@@ -88,6 +95,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def get_item_by_id(self, item_id):
         try:
             with self.connection.cursor() as cursor:
@@ -103,6 +111,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def get_item_seller_id(self, item_id):
         try:
             with self.connection.cursor() as cursor:
@@ -117,6 +126,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def update_item_rating(self, item_id, item_rating):
         try:
             with self.connection.cursor() as cursor:
@@ -129,6 +139,7 @@ class Dao:
         except Exception as e:
             print(f"Error: Unable to update buyer.\n{e}")
 
+    @replicated
     def update_seller_rating(self, seller_id, item_rating):
         try:
             with self.connection.cursor() as cursor:
@@ -141,6 +152,7 @@ class Dao:
         except Exception as e:
             print(f"Error: Unable to update buyer.\n{e}")
 
+    @replicated
     def get_item_price(self, item_id):
         try:
             with self.connection.cursor() as cursor:
@@ -155,6 +167,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def get_seller_rating(self, seller_id):
         try:
             with self.connection.cursor() as cursor:
@@ -170,10 +183,12 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def sell_item(self, seller_id, name, category, keywords, condition, price, quantity):
         description = keywords + " " + condition
         self.create_item(seller_id, name, price, description, category, quantity)
 
+    @replicated
     def get_items_for_seller(self, seller_id):
         try:
             with self.connection.cursor() as cursor:
@@ -190,6 +205,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def remove_item(self, item_id, quantity):
         try:
             with self.connection.cursor() as cursor:
@@ -206,6 +222,7 @@ class Dao:
             self.connection.commit()
             raise e
 
+    @replicated
     def update_price(self, item_id, price):
         try:
             with self.connection.cursor() as cursor:
