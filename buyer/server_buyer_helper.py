@@ -20,8 +20,8 @@ def jaccard_similarity(x, y):
 class BuyerServerHelper:
 
     def __init__(self):
-        self.customer_db = CustomerDatabaseConnection("localhost", 9000)
-        self.product_db = ProductDatabaseConnection("localhost", 9001)
+        self.customer_db = CustomerDatabaseConnection("localhost", 8994)
+        self.product_db = ProductDatabaseConnection("localhost", 9005)
 
     def login(self, data):
         username = data["body"]["username"]
