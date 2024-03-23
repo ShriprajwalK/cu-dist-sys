@@ -14,7 +14,8 @@ def get_db_credentials():
 class ProductServiceServicer(product_service_pb2_grpc.ProductServiceServicer):
 
     def __init__(self):
-        self.dao = Dao(get_db_credentials(), '0.0.0.0:50051', ['node2:50051', 'node3:50051'])
+        self.dao = Dao(get_db_credentials(), '0.0.0.0:6670', ['0.0.0.0:6667', '0.0.0.0:6668',
+                                                              '0.0.0.0:6669', '0.0.0.0:6666'])
 
     def CreateSeller(self, request, context):
         # Dummy implementation - in a real scenario, you would interact with a database
@@ -222,8 +223,8 @@ class ProductServiceServicer(product_service_pb2_grpc.ProductServiceServicer):
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     product_service_pb2_grpc.add_ProductServiceServicer_to_server(ProductServiceServicer(), server)
-    server.add_insecure_port('[::]:9001')
-    print('Starting server. Listening on port 9001.')
+    server.add_insecure_port('[::]:9005')
+    print('Starting server. Listening on port 9005.')
     server.start()
     server.wait_for_termination()
 
