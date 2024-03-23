@@ -4,14 +4,26 @@ package customer;
 
 service CustomerService {
   rpc CreateBuyer(CreateBuyerRequest) returns (CreateBuyerResponse);
-  rpc GetBuyerId(GetBuyerIdRequest) returns (GetBuyerIdResponse);
+  rpc ServerCreateBuyer(ServerCreateBuyerRequest) returns (ServerCreateBuyerResponse);
+
   rpc CreateCart(CreateCartRequest) returns (CreateCartResponse);
+  rpc ServerCreateCart(CreateCartRequest) returns (CreateCartResponse);
+
   rpc DeleteCartByBuyerId(DeleteCartByBuyerIdRequest) returns (DeleteCartByBuyerIdResponse);
-  rpc GetCartItem(GetCartItemRequest) returns (GetCartItemResponse);
+  rpc ServerDeleteCartByBuyerId(DeleteCartByBuyerIdRequest) returns (DeleteCartByBuyerIdResponse);
+
+
   rpc UpdateCartItemQuantity(UpdateCartItemQuantityRequest) returns (UpdateCartItemQuantityResponse);
+  rpc ServerUpdateCartItemQuantity(UpdateCartItemQuantityRequest) returns (UpdateCartItemQuantityResponse);
+
   rpc RemoveCartItem(RemoveCartItemRequest) returns (RemoveCartItemResponse);
+  rpc ServerRemoveCartItem(RemoveCartItemRequest) returns (RemoveCartItemResponse);
+
+  rpc GetCartItem(GetCartItemRequest) returns (GetCartItemResponse);
   rpc GetBuyerCartItems(GetBuyerCartItemsRequest) returns (GetBuyerCartItemsResponse);
   rpc GetBuyerPurchase(GetBuyerPurchaseRequest) returns(GetBuyerPurchaseResponse);
+
+  rpc GetBuyerId(GetBuyerIdRequest) returns (GetBuyerIdResponse);
 }
 
 message GetBuyerPurchaseRequest{
@@ -96,6 +108,18 @@ message  CreateBuyerRequest{
 message CreateBuyerResponse{
   bool success = 1;
 }
+
+message  ServerCreateBuyerRequest{
+  string username = 1;
+  string password = 2;
+}
+
+message ServerCreateBuyerResponse{
+  bool success = 1;
+}
+
+
+
 
 // Item details
 message Item {

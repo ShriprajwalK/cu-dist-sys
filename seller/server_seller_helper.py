@@ -6,7 +6,7 @@ import threading
 
 class SellerServerHelper:
     def __init__(self):
-        self.product_db = ProductDatabaseConnection("localhost", 9001)
+        self.product_db = ProductDatabaseConnection("localhost", 9005)
         self.sessions = {}
 
     def login(self, data):

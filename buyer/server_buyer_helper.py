@@ -6,8 +6,8 @@ import uuid
 import threading
 
 from zeep import Client
-wsdl_url = 'http://127.0.0.1:8000/?wsdl'
-client = Client(wsdl_url)
+# wsdl_url = 'http://127.0.0.1:8000/?wsdl'
+# client = Client(wsdl_url)
 
 
 
@@ -20,8 +20,8 @@ def jaccard_similarity(x, y):
 class BuyerServerHelper:
 
     def __init__(self):
-        self.customer_db = CustomerDatabaseConnection("localhost", 9000)
-        self.product_db = ProductDatabaseConnection("localhost", 9001)
+        self.customer_db = CustomerDatabaseConnection("localhost", 8994)
+        self.product_db = ProductDatabaseConnection("localhost", 9005)
 
     def login(self, data):
         username = data["body"]["username"]
@@ -271,5 +271,5 @@ class BuyerServerHelper:
 
     def purchase(self, data):
         buyer_id = data["body"]["buyer_id"]
-        response = client.service.process_transaction(buyer_id, 123123123)
-        return {'status': response}
+        # response = client.service.process_transaction(buyer_id, 123123123)
+        # return {'status': response}

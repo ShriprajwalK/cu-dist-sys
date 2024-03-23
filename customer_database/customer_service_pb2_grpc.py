@@ -19,13 +19,18 @@ class CustomerServiceStub(object):
                 request_serializer=customer__service__pb2.CreateBuyerRequest.SerializeToString,
                 response_deserializer=customer__service__pb2.CreateBuyerResponse.FromString,
                 )
-        self.GetBuyerId = channel.unary_unary(
-                '/customer.CustomerService/GetBuyerId',
-                request_serializer=customer__service__pb2.GetBuyerIdRequest.SerializeToString,
-                response_deserializer=customer__service__pb2.GetBuyerIdResponse.FromString,
+        self.ServerCreateBuyer = channel.unary_unary(
+                '/customer.CustomerService/ServerCreateBuyer',
+                request_serializer=customer__service__pb2.ServerCreateBuyerRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.ServerCreateBuyerResponse.FromString,
                 )
         self.CreateCart = channel.unary_unary(
                 '/customer.CustomerService/CreateCart',
+                request_serializer=customer__service__pb2.CreateCartRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.CreateCartResponse.FromString,
+                )
+        self.ServerCreateCart = channel.unary_unary(
+                '/customer.CustomerService/ServerCreateCart',
                 request_serializer=customer__service__pb2.CreateCartRequest.SerializeToString,
                 response_deserializer=customer__service__pb2.CreateCartResponse.FromString,
                 )
@@ -34,13 +39,18 @@ class CustomerServiceStub(object):
                 request_serializer=customer__service__pb2.DeleteCartByBuyerIdRequest.SerializeToString,
                 response_deserializer=customer__service__pb2.DeleteCartByBuyerIdResponse.FromString,
                 )
-        self.GetCartItem = channel.unary_unary(
-                '/customer.CustomerService/GetCartItem',
-                request_serializer=customer__service__pb2.GetCartItemRequest.SerializeToString,
-                response_deserializer=customer__service__pb2.GetCartItemResponse.FromString,
+        self.ServerDeleteCartByBuyerId = channel.unary_unary(
+                '/customer.CustomerService/ServerDeleteCartByBuyerId',
+                request_serializer=customer__service__pb2.DeleteCartByBuyerIdRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.DeleteCartByBuyerIdResponse.FromString,
                 )
         self.UpdateCartItemQuantity = channel.unary_unary(
                 '/customer.CustomerService/UpdateCartItemQuantity',
+                request_serializer=customer__service__pb2.UpdateCartItemQuantityRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.UpdateCartItemQuantityResponse.FromString,
+                )
+        self.ServerUpdateCartItemQuantity = channel.unary_unary(
+                '/customer.CustomerService/ServerUpdateCartItemQuantity',
                 request_serializer=customer__service__pb2.UpdateCartItemQuantityRequest.SerializeToString,
                 response_deserializer=customer__service__pb2.UpdateCartItemQuantityResponse.FromString,
                 )
@@ -48,6 +58,16 @@ class CustomerServiceStub(object):
                 '/customer.CustomerService/RemoveCartItem',
                 request_serializer=customer__service__pb2.RemoveCartItemRequest.SerializeToString,
                 response_deserializer=customer__service__pb2.RemoveCartItemResponse.FromString,
+                )
+        self.ServerRemoveCartItem = channel.unary_unary(
+                '/customer.CustomerService/ServerRemoveCartItem',
+                request_serializer=customer__service__pb2.RemoveCartItemRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.RemoveCartItemResponse.FromString,
+                )
+        self.GetCartItem = channel.unary_unary(
+                '/customer.CustomerService/GetCartItem',
+                request_serializer=customer__service__pb2.GetCartItemRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.GetCartItemResponse.FromString,
                 )
         self.GetBuyerCartItems = channel.unary_unary(
                 '/customer.CustomerService/GetBuyerCartItems',
@@ -58,6 +78,11 @@ class CustomerServiceStub(object):
                 '/customer.CustomerService/GetBuyerPurchase',
                 request_serializer=customer__service__pb2.GetBuyerPurchaseRequest.SerializeToString,
                 response_deserializer=customer__service__pb2.GetBuyerPurchaseResponse.FromString,
+                )
+        self.GetBuyerId = channel.unary_unary(
+                '/customer.CustomerService/GetBuyerId',
+                request_serializer=customer__service__pb2.GetBuyerIdRequest.SerializeToString,
+                response_deserializer=customer__service__pb2.GetBuyerIdResponse.FromString,
                 )
 
 
@@ -70,7 +95,7 @@ class CustomerServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetBuyerId(self, request, context):
+    def ServerCreateBuyer(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -82,13 +107,19 @@ class CustomerServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ServerCreateCart(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def DeleteCartByBuyerId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetCartItem(self, request, context):
+    def ServerDeleteCartByBuyerId(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -100,7 +131,25 @@ class CustomerServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ServerUpdateCartItemQuantity(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def RemoveCartItem(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def ServerRemoveCartItem(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetCartItem(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -118,6 +167,12 @@ class CustomerServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetBuyerId(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_CustomerServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -126,13 +181,18 @@ def add_CustomerServiceServicer_to_server(servicer, server):
                     request_deserializer=customer__service__pb2.CreateBuyerRequest.FromString,
                     response_serializer=customer__service__pb2.CreateBuyerResponse.SerializeToString,
             ),
-            'GetBuyerId': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetBuyerId,
-                    request_deserializer=customer__service__pb2.GetBuyerIdRequest.FromString,
-                    response_serializer=customer__service__pb2.GetBuyerIdResponse.SerializeToString,
+            'ServerCreateBuyer': grpc.unary_unary_rpc_method_handler(
+                    servicer.ServerCreateBuyer,
+                    request_deserializer=customer__service__pb2.ServerCreateBuyerRequest.FromString,
+                    response_serializer=customer__service__pb2.ServerCreateBuyerResponse.SerializeToString,
             ),
             'CreateCart': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateCart,
+                    request_deserializer=customer__service__pb2.CreateCartRequest.FromString,
+                    response_serializer=customer__service__pb2.CreateCartResponse.SerializeToString,
+            ),
+            'ServerCreateCart': grpc.unary_unary_rpc_method_handler(
+                    servicer.ServerCreateCart,
                     request_deserializer=customer__service__pb2.CreateCartRequest.FromString,
                     response_serializer=customer__service__pb2.CreateCartResponse.SerializeToString,
             ),
@@ -141,13 +201,18 @@ def add_CustomerServiceServicer_to_server(servicer, server):
                     request_deserializer=customer__service__pb2.DeleteCartByBuyerIdRequest.FromString,
                     response_serializer=customer__service__pb2.DeleteCartByBuyerIdResponse.SerializeToString,
             ),
-            'GetCartItem': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetCartItem,
-                    request_deserializer=customer__service__pb2.GetCartItemRequest.FromString,
-                    response_serializer=customer__service__pb2.GetCartItemResponse.SerializeToString,
+            'ServerDeleteCartByBuyerId': grpc.unary_unary_rpc_method_handler(
+                    servicer.ServerDeleteCartByBuyerId,
+                    request_deserializer=customer__service__pb2.DeleteCartByBuyerIdRequest.FromString,
+                    response_serializer=customer__service__pb2.DeleteCartByBuyerIdResponse.SerializeToString,
             ),
             'UpdateCartItemQuantity': grpc.unary_unary_rpc_method_handler(
                     servicer.UpdateCartItemQuantity,
+                    request_deserializer=customer__service__pb2.UpdateCartItemQuantityRequest.FromString,
+                    response_serializer=customer__service__pb2.UpdateCartItemQuantityResponse.SerializeToString,
+            ),
+            'ServerUpdateCartItemQuantity': grpc.unary_unary_rpc_method_handler(
+                    servicer.ServerUpdateCartItemQuantity,
                     request_deserializer=customer__service__pb2.UpdateCartItemQuantityRequest.FromString,
                     response_serializer=customer__service__pb2.UpdateCartItemQuantityResponse.SerializeToString,
             ),
@@ -155,6 +220,16 @@ def add_CustomerServiceServicer_to_server(servicer, server):
                     servicer.RemoveCartItem,
                     request_deserializer=customer__service__pb2.RemoveCartItemRequest.FromString,
                     response_serializer=customer__service__pb2.RemoveCartItemResponse.SerializeToString,
+            ),
+            'ServerRemoveCartItem': grpc.unary_unary_rpc_method_handler(
+                    servicer.ServerRemoveCartItem,
+                    request_deserializer=customer__service__pb2.RemoveCartItemRequest.FromString,
+                    response_serializer=customer__service__pb2.RemoveCartItemResponse.SerializeToString,
+            ),
+            'GetCartItem': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetCartItem,
+                    request_deserializer=customer__service__pb2.GetCartItemRequest.FromString,
+                    response_serializer=customer__service__pb2.GetCartItemResponse.SerializeToString,
             ),
             'GetBuyerCartItems': grpc.unary_unary_rpc_method_handler(
                     servicer.GetBuyerCartItems,
@@ -165,6 +240,11 @@ def add_CustomerServiceServicer_to_server(servicer, server):
                     servicer.GetBuyerPurchase,
                     request_deserializer=customer__service__pb2.GetBuyerPurchaseRequest.FromString,
                     response_serializer=customer__service__pb2.GetBuyerPurchaseResponse.SerializeToString,
+            ),
+            'GetBuyerId': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetBuyerId,
+                    request_deserializer=customer__service__pb2.GetBuyerIdRequest.FromString,
+                    response_serializer=customer__service__pb2.GetBuyerIdResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -194,7 +274,7 @@ class CustomerService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetBuyerId(request,
+    def ServerCreateBuyer(request,
             target,
             options=(),
             channel_credentials=None,
@@ -204,9 +284,9 @@ class CustomerService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/GetBuyerId',
-            customer__service__pb2.GetBuyerIdRequest.SerializeToString,
-            customer__service__pb2.GetBuyerIdResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/ServerCreateBuyer',
+            customer__service__pb2.ServerCreateBuyerRequest.SerializeToString,
+            customer__service__pb2.ServerCreateBuyerResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -222,6 +302,23 @@ class CustomerService(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/CreateCart',
+            customer__service__pb2.CreateCartRequest.SerializeToString,
+            customer__service__pb2.CreateCartResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ServerCreateCart(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/ServerCreateCart',
             customer__service__pb2.CreateCartRequest.SerializeToString,
             customer__service__pb2.CreateCartResponse.FromString,
             options, channel_credentials,
@@ -245,7 +342,7 @@ class CustomerService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetCartItem(request,
+    def ServerDeleteCartByBuyerId(request,
             target,
             options=(),
             channel_credentials=None,
@@ -255,9 +352,9 @@ class CustomerService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/GetCartItem',
-            customer__service__pb2.GetCartItemRequest.SerializeToString,
-            customer__service__pb2.GetCartItemResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/ServerDeleteCartByBuyerId',
+            customer__service__pb2.DeleteCartByBuyerIdRequest.SerializeToString,
+            customer__service__pb2.DeleteCartByBuyerIdResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -279,6 +376,23 @@ class CustomerService(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
+    def ServerUpdateCartItemQuantity(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/ServerUpdateCartItemQuantity',
+            customer__service__pb2.UpdateCartItemQuantityRequest.SerializeToString,
+            customer__service__pb2.UpdateCartItemQuantityResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
     def RemoveCartItem(request,
             target,
             options=(),
@@ -292,6 +406,40 @@ class CustomerService(object):
         return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/RemoveCartItem',
             customer__service__pb2.RemoveCartItemRequest.SerializeToString,
             customer__service__pb2.RemoveCartItemResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def ServerRemoveCartItem(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/ServerRemoveCartItem',
+            customer__service__pb2.RemoveCartItemRequest.SerializeToString,
+            customer__service__pb2.RemoveCartItemResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetCartItem(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/GetCartItem',
+            customer__service__pb2.GetCartItemRequest.SerializeToString,
+            customer__service__pb2.GetCartItemResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -326,5 +474,22 @@ class CustomerService(object):
         return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/GetBuyerPurchase',
             customer__service__pb2.GetBuyerPurchaseRequest.SerializeToString,
             customer__service__pb2.GetBuyerPurchaseResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetBuyerId(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/customer.CustomerService/GetBuyerId',
+            customer__service__pb2.GetBuyerIdRequest.SerializeToString,
+            customer__service__pb2.GetBuyerIdResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
